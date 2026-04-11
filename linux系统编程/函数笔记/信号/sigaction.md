@@ -40,6 +40,10 @@ tags:
 - struct [[linux系统编程/概念词条/sigaction结构|sigaction]] 里最重要的是 `sa_handler` / `sa_sigaction`、`sa_mask` 和 `sa_flags`。
 - `sa_mask` 用来定义处理某个信号时额外屏蔽哪些信号。
 - 和 [[linux系统编程/函数笔记/信号/signal.md|signal]] 相比，它更适合写出稳定的信号处理代码。
+- 信号捕捉特性：
+	1. 捕捉函数执行期间，信号屏蔽字 由 mask --> sa_mask , 捕捉函数执行结束。 恢复回mask
+	2. 捕捉函数执行期间，本信号自动被屏蔽(sa_flags = 0).
+	3. 捕捉函数执行期间，被屏蔽信号多次发送，解除屏蔽后只处理一次！
 
 ## 常见用法
 
