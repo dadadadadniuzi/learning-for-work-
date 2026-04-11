@@ -41,6 +41,9 @@ tags:
 - 原型里的 `sighandler` 只是“参数名”，真正更常见的说法是 [[linux系统编程/概念词条/sighandler_t|sighandler_t]]，也就是“接收一个 `int` 信号编号、返回 `void` 的函数指针类型”。
 - 通过它可以把信号设为捕捉、忽略或恢复默认动作。
 - 真正推荐的可控方式通常是 [[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]。
+- `void (*p)(int)`表示：
+	p 是一个指针，指向“参数为 int、返回值为 void”的函数。
+	
 
 ## 常见用法
 
