@@ -30,7 +30,7 @@ tags:
 ## 返回值
 
 - 成功返回 0。
-- 失败返回 -1，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 -1，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
@@ -44,7 +44,7 @@ tags:
 
 ## 易错点
 
-- 不要把目录流关闭成 `close`，目录流要用 `[[linux系统编程/函数笔记/目录与文件系统/closedir.md|closedir]]`。
+- 不要把目录流关闭成 `close`，目录流要用 [[linux系统编程/函数笔记/目录与文件系统/closedir.md|closedir]]。
 
 ## 相关概念
 

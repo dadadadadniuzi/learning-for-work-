@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `[[linux系统编程/概念词条/pthread_t|pthread_t]] pthread_self(void);`
+- [[linux系统编程/概念词条/pthread_t|pthread_t]] pthread_self(void);
 
 ## 依赖头文件
 
@@ -29,7 +29,7 @@ tags:
 
 ## 返回值
 
-- 返回当前线程的 `[[linux系统编程/概念词条/pthread_t|pthread_t]]`。
+- 返回当前线程的 [[linux系统编程/概念词条/pthread_t|pthread_t]]。
 
 ## 知识点补充
 
@@ -42,7 +42,7 @@ tags:
 
 ## 易错点
 
-- 线程 ID 的比较方式要遵循 `[[linux系统编程/概念词条/pthread_t|pthread_t]]` 类型语义。
+- 线程 ID 的比较方式要遵循 [[linux系统编程/概念词条/pthread_t|pthread_t]] 类型语义。
 
 ## 相关概念
 

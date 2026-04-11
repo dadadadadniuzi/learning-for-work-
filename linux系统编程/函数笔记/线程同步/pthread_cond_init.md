@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int pthread_cond_init([[linux系统编程/概念词条/pthread_cond_t|pthread_cond_t]] *cond, const pthread_condattr_t *attr);`
+- int pthread_cond_init([[linux系统编程/概念词条/pthread_cond_t|pthread_cond_t]] \\*cond, const pthread_condattr_t \\*attr);
 
 ## 依赖头文件
 

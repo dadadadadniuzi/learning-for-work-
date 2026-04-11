@@ -35,7 +35,7 @@ tags:
 ## 知识点补充
 
 - 分离状态的线程结束后，系统会自动回收资源。
-- 分离线程不能再被 `[[linux系统编程/函数笔记/线程/pthread_join.md|pthread_join]]` 回收。
+- 分离线程不能再被 [[linux系统编程/函数笔记/线程/pthread_join.md|pthread_join]] 回收。
 
 ## 常见用法
 

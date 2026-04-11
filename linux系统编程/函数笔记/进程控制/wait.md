@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `[[linux系统编程/概念词条/pid_t|pid_t]] wait(int *wstatus);`
+- [[linux系统编程/概念词条/pid_t|pid_t]] wait(int \\*wstatus);
 
 ## 依赖头文件
 
@@ -33,19 +33,19 @@ tags:
 
 - 成功返回被回收子进程的 `pid`。
 - 没有可回收子进程时会阻塞等待。
-- 出错返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 出错返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
 - `wait` 的作用是阻塞父进程，直到某个子进程结束并被回收。
 - `wstatus` 里保存的是内核编码后的状态，必须配合 [[linux系统编程/概念词条/wait状态宏|WIFEXITED]]、[[linux系统编程/概念词条/wait状态宏|WEXITSTATUS]]、[[linux系统编程/概念词条/wait状态宏|WIFSIGNALED]]、[[linux系统编程/概念词条/wait状态宏|WTERMSIG]] 等宏解析。
 - 它常用于回收僵尸子进程，避免子进程退出后只留下进程表项。
-- 如果想精确等待指定子进程，或者不想阻塞等待，通常改用 `[[linux系统编程/函数笔记/进程控制/waitpid.md|waitpid]]`。
+- 如果想精确等待指定子进程，或者不想阻塞等待，通常改用 [[linux系统编程/函数笔记/进程控制/waitpid.md|waitpid]]。
 
 ## 常见用法
 
 - 父进程回收任意一个子进程。
-- 配合 `[[linux系统编程/函数笔记/进程控制/fork.md|fork]]` 管理多个子进程。
+- 配合 [[linux系统编程/函数笔记/进程控制/fork.md|fork]] 管理多个子进程。
 
 ## 易错点
 

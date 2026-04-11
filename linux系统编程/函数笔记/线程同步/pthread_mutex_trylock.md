@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int [[linux系统编程/函数笔记/线程同步/[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock.md|[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock]]([[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] *mutex);`
+- int [[linux系统编程/函数笔记/线程同步/[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock.md|[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock]]([[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] \\*mutex);
 
 ## 依赖头文件
 

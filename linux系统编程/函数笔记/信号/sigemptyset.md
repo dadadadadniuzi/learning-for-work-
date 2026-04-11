@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int sigemptyset([[linux系统编程/概念词条/sigset_t|sigset_t]] *set);`
+- int sigemptyset([[linux系统编程/概念词条/sigset_t|sigset_t]] \\*set);
 
 ## 依赖头文件
 
@@ -30,16 +30,16 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
-- `[[linux系统编程/概念词条/sigset_t|sigset_t]]` 可以看成信号集合的抽象表示。
+- [[linux系统编程/概念词条/sigset_t|sigset_t]] 可以看成信号集合的抽象表示。
 - `sigemptyset` 是在往信号集里加东西之前的第一步。
 
 ## 常见用法
 
-- 构造信号屏蔽字或 `[[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]` 的掩码。
+- 构造信号屏蔽字或 [[linux系统编程/函数笔记/信号/sigaction.md|sigaction]] 的掩码。
 
 ## 易错点
 

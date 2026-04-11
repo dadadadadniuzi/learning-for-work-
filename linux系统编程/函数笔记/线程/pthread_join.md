@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int pthread_join([[linux系统编程/概念词条/pthread_t|pthread_t]] thread, void **retval);`
+- int pthread_join([[linux系统编程/概念词条/pthread_t|pthread_t]] thread, void \\*\\*retval);
 
 ## 依赖头文件
 

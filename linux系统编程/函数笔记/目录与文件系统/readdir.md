@@ -13,15 +13,15 @@ tags:
 
 ## 函数原型
 
-- `struct [[linux系统编程/概念词条/dirent|dirent]] *readdir([[linux系统编程/概念词条/DIR|DIR]] *dirp);`
+- struct [[linux系统编程/概念词条/dirent|dirent]] \\*readdir([[linux系统编程/概念词条/DIR|DIR]] \\*dirp);
 
 ## 依赖头文件
 
-- `#include <[[linux系统编程/概念词条/dirent|dirent]].h>`
+- #include <[[linux系统编程/概念词条/dirent|dirent]].h>
 
 ## 输入参数
 
-- `dirp`：已经通过 `[[linux系统编程/函数笔记/目录与文件系统/opendir.md|opendir]]` 打开的目录流。
+- `dirp`：已经通过 [[linux系统编程/函数笔记/目录与文件系统/opendir.md|opendir]] 打开的目录流。
 
 ## 输出参数
 
@@ -30,7 +30,7 @@ tags:
 ## 返回值
 
 - 成功返回指向 `struct [[linux系统编程/概念词条/dirent|dirent]]` 的指针。
-- 读到末尾或出错时返回 `NULL`，需要结合 `[[linux系统编程/概念词条/errno|errno]]` 判断。
+- 读到末尾或出错时返回 `NULL`，需要结合 [[linux系统编程/概念词条/errno|errno]] 判断。
 
 ## 知识点补充
 
@@ -45,7 +45,7 @@ tags:
 ## 易错点
 
 - 不要长期保存 `readdir` 返回指针，后续调用可能覆盖。
-- 末尾返回 `NULL` 不一定是错误，要结合 `[[linux系统编程/概念词条/errno|errno]]` 看。
+- 末尾返回 `NULL` 不一定是错误，要结合 [[linux系统编程/概念词条/errno|errno]] 看。
 
 ## 相关概念
 

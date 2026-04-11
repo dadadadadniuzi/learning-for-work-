@@ -1,4 +1,4 @@
-﻿---
+---
 title: sigset_t
 tags:
   - linux

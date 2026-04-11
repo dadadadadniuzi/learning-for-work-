@@ -26,10 +26,10 @@ tags:
 
 - `addr`：建议映射起始地址，通常传 `NULL` 让内核自行选择。
 - `length`：要映射的长度。
-- `prot`：页保护权限，如 `[[linux系统编程/概念词条/mmap保护权限|PROT_READ]]`、`[[linux系统编程/概念词条/mmap保护权限|PROT_WRITE]]`。
-- `flags`：映射方式，如 `[[linux系统编程/概念词条/mmap映射标志|MAP_SHARED]]`、`[[linux系统编程/概念词条/mmap映射标志|MAP_PRIVATE]]`、`[[linux系统编程/概念词条/mmap映射标志|MAP_ANONYMOUS]]`。
+- `prot`：页保护权限，如 [[linux系统编程/概念词条/mmap保护权限|PROT_READ]]、[[linux系统编程/概念词条/mmap保护权限|PROT_WRITE]]。
+- `flags`：映射方式，如 [[linux系统编程/概念词条/mmap映射标志|MAP_SHARED]]、[[linux系统编程/概念词条/mmap映射标志|MAP_PRIVATE]]、[[linux系统编程/概念词条/mmap映射标志|MAP_ANONYMOUS]]。
 - `fd`：被映射的文件描述符；匿名映射时按标志要求处理。
-- `offset`：文件映射偏移，必须满足 `[[linux系统编程/概念词条/页对齐|页对齐]]` 要求。
+- `offset`：文件映射偏移，必须满足 [[linux系统编程/概念词条/页对齐|页对齐]] 要求。
 
 ## 输出参数
 
@@ -38,14 +38,14 @@ tags:
 ## 返回值
 
 - 成功返回映射区首地址。
-- 失败返回 `[[linux系统编程/概念词条/MAP_FAILED|MAP_FAILED]]`。
+- 失败返回 [[linux系统编程/概念词条/MAP_FAILED|MAP_FAILED]]。
 
 ## 知识点补充
 
 - `mmap` 会把一段文件或匿名内存直接映射到进程虚拟地址空间。
 - `prot` 决定“能不能读写执行”，`flags` 决定“共享还是私有、有没有文件、是否匿名”。
 - 如果是文件映射，`offset` 必须页对齐，否则会失败。
-- 出错时返回的不是 `NULL`，而是 `[[linux系统编程/概念词条/MAP_FAILED|MAP_FAILED]]`。
+- 出错时返回的不是 `NULL`，而是 [[linux系统编程/概念词条/MAP_FAILED|MAP_FAILED]]。
 
 ## 常见用法
 

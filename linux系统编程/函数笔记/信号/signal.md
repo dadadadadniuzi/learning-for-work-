@@ -35,9 +35,9 @@ tags:
 
 ## 知识点补充
 
-- `signal` 属于老式接口，语义相对简单，但在不同系统上的行为细节不如 `[[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]` 稳定。
+- `signal` 属于老式接口，语义相对简单，但在不同系统上的行为细节不如 [[linux系统编程/函数笔记/信号/sigaction.md|sigaction]] 稳定。
 - 通过它可以把信号设为捕捉、忽略或恢复默认动作。
-- 真正推荐的可控方式通常是 `[[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]`。
+- 真正推荐的可控方式通常是 [[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]。
 
 ## 常见用法
 
@@ -45,7 +45,7 @@ tags:
 
 ## 易错点
 
-- 不要把 `signal` 当作更强大的统一方案，复杂场景优先 `[[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]`。
+- 不要把 `signal` 当作更强大的统一方案，复杂场景优先 [[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]。
 
 ## 相关概念
 

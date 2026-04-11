@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `[[linux系统编程/概念词条/pid_t|pid_t]] getppid(void);`
+- [[linux系统编程/概念词条/pid_t|pid_t]] getppid(void);
 
 ## 依赖头文件
 
@@ -36,7 +36,7 @@ tags:
 
 - `getppid` 可以帮助你看清当前进程的来源。
 - 当父进程退出后，孤儿进程会被系统托管给新的父进程，`getppid` 的结果也会变化。
-- 它经常和 `[[linux系统编程/函数笔记/进程控制/fork.md|fork]]`、`[[linux系统编程/函数笔记/进程控制/getpid.md|getpid]]` 搭配，用来观察父子关系。
+- 它经常和 [[linux系统编程/函数笔记/进程控制/fork.md|fork]]、[[linux系统编程/函数笔记/进程控制/getpid.md|getpid]] 搭配，用来观察父子关系。
 
 ## 常见用法
 

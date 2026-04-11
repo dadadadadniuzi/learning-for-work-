@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `void [[linux系统编程/函数笔记/线程/pthread_exit.md|pthread_exit]](void *retval);`
+- void [[linux系统编程/函数笔记/线程/pthread_exit.md|pthread_exit]](void \\*retval);
 
 ## 依赖头文件
 
@@ -21,7 +21,7 @@ tags:
 
 ## 输入参数
 
-- `retval`：线程退出时返回给 `[[linux系统编程/函数笔记/线程/pthread_join.md|pthread_join]]` 的值。
+- `retval`：线程退出时返回给 [[linux系统编程/函数笔记/线程/pthread_join.md|pthread_join]] 的值。
 
 ## 输出参数
 
@@ -34,7 +34,7 @@ tags:
 ## 知识点补充
 
 - 它只终止当前线程，不会让整个进程直接退出。
-- `retval` 通常会在 `[[linux系统编程/函数笔记/线程/pthread_join.md|pthread_join]]` 中被取回。
+- `retval` 通常会在 [[linux系统编程/函数笔记/线程/pthread_join.md|pthread_join]] 中被取回。
 
 ## 常见用法
 

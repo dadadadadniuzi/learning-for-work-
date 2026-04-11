@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `[[linux系统编程/概念词条/pid_t|pid_t]] setsid(void);`
+- [[linux系统编程/概念词条/pid_t|pid_t]] setsid(void);
 
 ## 依赖头文件
 
@@ -30,7 +30,7 @@ tags:
 ## 返回值
 
 - 成功返回新的会话 ID。
-- 失败返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 

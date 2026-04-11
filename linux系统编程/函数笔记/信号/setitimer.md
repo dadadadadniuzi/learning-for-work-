@@ -33,18 +33,18 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
 - `itimerval` 结构体里有 `it_value` 和 `it_interval` 两部分，分别表示下一次触发和后续周期。
 - [[linux系统编程/概念词条/setitimer类型|ITIMER_REAL]] 触发 [[linux系统编程/概念词条/SIGALRM|SIGALRM]]，[[linux系统编程/概念词条/setitimer类型|ITIMER_VIRTUAL]] 和 [[linux系统编程/概念词条/setitimer类型|ITIMER_PROF]] 则和进程运行时间相关。
-- 它比 `[[linux系统编程/函数笔记/信号/alarm.md|alarm]]` 更灵活，能做周期性定时。
+- 它比 [[linux系统编程/函数笔记/信号/alarm.md|alarm]] 更灵活，能做周期性定时。
 
 ## 常见用法
 
 - 实现周期定时。
-- 替代简单 `[[linux系统编程/函数笔记/信号/alarm.md|alarm]]` 完成更复杂的超时控制。
+- 替代简单 [[linux系统编程/函数笔记/信号/alarm.md|alarm]] 完成更复杂的超时控制。
 
 ## 易错点
 

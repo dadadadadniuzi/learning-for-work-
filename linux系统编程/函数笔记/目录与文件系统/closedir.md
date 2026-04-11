@@ -13,11 +13,11 @@ tags:
 
 ## 函数原型
 
-- `int closedir([[linux系统编程/概念词条/DIR|DIR]] *dirp);`
+- int closedir([[linux系统编程/概念词条/DIR|DIR]] \\*dirp);
 
 ## 依赖头文件
 
-- `#include <[[linux系统编程/概念词条/dirent|dirent]].h>`
+- #include <[[linux系统编程/概念词条/dirent|dirent]].h>
 
 ## 输入参数
 
@@ -30,11 +30,11 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
-- `closedir` 对应 `[[linux系统编程/函数笔记/目录与文件系统/opendir.md|opendir]]`，是目录流生命周期的结束。
+- `closedir` 对应 [[linux系统编程/函数笔记/目录与文件系统/opendir.md|opendir]]，是目录流生命周期的结束。
 - 关闭目录流可以释放内部缓存和底层资源。
 
 ## 常见用法

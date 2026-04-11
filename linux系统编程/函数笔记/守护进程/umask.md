@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `[[linux系统编程/概念词条/mode_t|mode_t]] umask([[linux系统编程/概念词条/mode_t|mode_t]] mask);`
+- [[linux系统编程/概念词条/mode_t|mode_t]] umask([[linux系统编程/概念词条/mode_t|mode_t]] mask);
 
 ## 依赖头文件
 

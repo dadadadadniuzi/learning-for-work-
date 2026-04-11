@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `char *getcwd(char *buf, [[linux系统编程/概念词条/size_t|size_t]] size);`
+- char \\*getcwd(char \\*buf, [[linux系统编程/概念词条/size_t|size_t]] size);
 
 ## 依赖头文件
 
@@ -31,7 +31,7 @@ tags:
 ## 返回值
 
 - 成功返回 `buf`。
-- 失败返回 `NULL`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `NULL`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 

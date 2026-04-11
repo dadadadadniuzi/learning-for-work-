@@ -32,14 +32,14 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
 - `sigaction` 是 Linux 系统编程里设置信号处理的主力接口。
 - `struct sigaction` 里最重要的是 `sa_handler` / `sa_sigaction`、`sa_mask` 和 `sa_flags`。
 - `sa_mask` 用来定义处理某个信号时额外屏蔽哪些信号。
-- 和 `[[linux系统编程/函数笔记/信号/signal.md|signal]]` 相比，它更适合写出稳定的信号处理代码。
+- 和 [[linux系统编程/函数笔记/信号/signal.md|signal]] 相比，它更适合写出稳定的信号处理代码。
 
 ## 常见用法
 

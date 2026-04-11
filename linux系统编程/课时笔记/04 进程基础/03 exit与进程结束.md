@@ -1,4 +1,4 @@
-﻿---
+---
 title: exit与进程结束
 tags:
   - linux

@@ -31,12 +31,12 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回 `-1`，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
 - `sigaddset` 常用于构造屏蔽字。
-- 它通常配合 `[[linux系统编程/函数笔记/信号/sigemptyset.md|sigemptyset]]` 和 `[[linux系统编程/函数笔记/信号/sigprocmask.md|sigprocmask]]` 使用。
+- 它通常配合 [[linux系统编程/函数笔记/信号/sigemptyset.md|sigemptyset]] 和 [[linux系统编程/函数笔记/信号/sigprocmask.md|sigprocmask]] 使用。
 
 ## 常见用法
 

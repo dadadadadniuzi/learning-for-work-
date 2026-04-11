@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `[[linux系统编程/概念词条/pid_t|pid_t]] waitpid([[linux系统编程/概念词条/pid_t|pid_t]] pid, int *wstatus, int options);`
+- [[linux系统编程/概念词条/pid_t|pid_t]] waitpid([[linux系统编程/概念词条/pid_t|pid_t]] pid, int \\*wstatus, int options);
 
 ## 依赖头文件
 
@@ -35,20 +35,20 @@ tags:
 
 - `> 0`：返回被回收子进程的 `pid`。
 - `0`：配合 [[linux系统编程/概念词条/waitpid选项|WNOHANG]] 使用时表示暂时没有子进程状态变化。
-- `-1`：出错并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- `-1`：出错并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
 - `waitpid` 比 `wait` 更灵活，可以指定要等哪个子进程。
 - `options` 决定是否阻塞，[[linux系统编程/概念词条/waitpid选项|WNOHANG]] 可以让调用立即返回，适合事件循环或信号处理场景。
-- 它配合 `[[linux系统编程/概念词条/SIGCHLD|SIGCHLD]]` 很常见，可以用来循环回收多个退出的子进程。
+- 它配合 [[linux系统编程/概念词条/SIGCHLD|SIGCHLD]] 很常见，可以用来循环回收多个退出的子进程。
 - `wstatus` 仍然需要配合 [[linux系统编程/概念词条/wait状态宏|WIFEXITED]]、[[linux系统编程/概念词条/wait状态宏|WEXITSTATUS]]、[[linux系统编程/概念词条/wait状态宏|WIFSIGNALED]]、[[linux系统编程/概念词条/wait状态宏|WTERMSIG]] 等宏读取真正含义。
 
 ## 常见用法
 
 - 非阻塞回收子进程。
 - 只回收指定 `pid` 的孩子。
-- 在 `[[linux系统编程/概念词条/SIGCHLD|SIGCHLD]]` 处理逻辑里循环调用。
+- 在 [[linux系统编程/概念词条/SIGCHLD|SIGCHLD]] 处理逻辑里循环调用。
 
 ## 易错点
 

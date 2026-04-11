@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int pthread_cond_wait([[linux系统编程/概念词条/pthread_cond_t|pthread_cond_t]] *cond, [[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] *mutex);`
+- int pthread_cond_wait([[linux系统编程/概念词条/pthread_cond_t|pthread_cond_t]] \\*cond, [[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] \\*mutex);
 
 ## 依赖头文件
 

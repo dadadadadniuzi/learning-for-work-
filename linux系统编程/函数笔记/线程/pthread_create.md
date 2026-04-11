@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int pthread_create([[linux系统编程/概念词条/pthread_t|pthread_t]] *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);`
+- int pthread_create([[linux系统编程/概念词条/pthread_t|pthread_t]] \\*thread, const pthread_attr_t \\*attr, void \\*(\\*start_routine)(void \\*), void \\*arg);
 
 ## 依赖头文件
 
@@ -39,7 +39,7 @@ tags:
 
 - 新线程会和创建者共享地址空间、[[linux系统编程/概念词条/文件描述符|文件描述符]]和很多进程资源。
 - 线程入口函数的参数通常需要自己设计结构体来传递复杂数据。
-- `[[linux系统编程/概念词条/pthread_t|pthread_t]]` 是线程标识，不要把它当普通整数随便比较或打印。
+- [[linux系统编程/概念词条/pthread_t|pthread_t]] 是线程标识，不要把它当普通整数随便比较或打印。
 
 ## 常见用法
 

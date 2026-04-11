@@ -32,7 +32,7 @@ tags:
 ## 返回值
 
 - 成功返回新的文件偏移量。
-- 失败返回 -1，并设置 `[[linux系统编程/概念词条/errno|errno]]`。
+- 失败返回 -1，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
@@ -47,7 +47,7 @@ tags:
 ## 易错点
 
 - 别把 `lseek` 当成修改文件内容的接口。
-- 只想改文件大小时通常直接用 `[[linux系统编程/函数笔记/文件IO/ftruncate.md|ftruncate]]` 更合适。
+- 只想改文件大小时通常直接用 [[linux系统编程/函数笔记/文件IO/ftruncate.md|ftruncate]] 更合适。
 
 ## 相关概念
 
