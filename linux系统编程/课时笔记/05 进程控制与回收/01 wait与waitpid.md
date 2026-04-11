@@ -1,4 +1,4 @@
-﻿---
+---
 title: wait与waitpid
 tags:
   - linux

@@ -1,4 +1,4 @@
-﻿---
+---
 title: wait状态宏
 tags:
   - linux
