@@ -17,8 +17,7 @@ tags:
 
 ## 依赖头文件
 
-- #include <unistd.h>
-
+- `#include <unistd.h>`
 ## 输入参数
 
 - fd：支持随机访问的[[linux系统编程/概念词条/文件描述符|文件描述符]]。

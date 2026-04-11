@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- int sigemptyset([[linux系统编程/概念词条/sigset_t|sigset_t]] \\*set);
+- int sigemptyset([[linux系统编程/概念词条/sigset_t|sigset_t]] \*set);
 
 ## 依赖头文件
 
@@ -21,7 +21,7 @@ tags:
 
 ## 输入参数
 
-- `set`：要初始化的信号集。
+- `set`：要初始化的信号集地址，类型是 [[linux系统编程/概念词条/sigset_t|sigset_t]] `*`。函数会通过这个指针直接修改信号集内容。
 
 ## 输出参数
 

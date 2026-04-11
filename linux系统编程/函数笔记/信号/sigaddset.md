@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int sigaddset(sigset_t *set, int signum);`
+- int sigaddset([[linux系统编程/概念词条/sigset_t|sigset_t]] \*set, int signum);
 
 ## 依赖头文件
 

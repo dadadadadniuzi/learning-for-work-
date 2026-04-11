@@ -13,11 +13,11 @@ tags:
 
 ## 函数原型
 
-- struct [[linux系统编程/概念词条/dirent|dirent]] \\*readdir([[linux系统编程/概念词条/DIR|DIR]] \\*dirp);
+- struct [[linux系统编程/概念词条/dirent|dirent]] \*readdir([[linux系统编程/概念词条/DIR|DIR]] \*dirp);
 
 ## 依赖头文件
 
-- #include <[[linux系统编程/概念词条/dirent|dirent]].h>
+- `#include <dirent.h>`
 
 ## 输入参数
 
@@ -29,7 +29,7 @@ tags:
 
 ## 返回值
 
-- 成功返回指向 `struct [[linux系统编程/概念词条/dirent|dirent]]` 的指针。
+- 成功返回指向 struct [[linux系统编程/概念词条/dirent|dirent]] 的指针。
 - 读到末尾或出错时返回 `NULL`，需要结合 [[linux系统编程/概念词条/errno|errno]] 判断。
 
 ## 知识点补充

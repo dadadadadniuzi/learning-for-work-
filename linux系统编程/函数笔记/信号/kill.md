@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int kill(pid_t pid, int sig);`
+- int kill([[linux系统编程/概念词条/pid_t|pid_t]] pid, int sig);
 
 ## 依赖头文件
 

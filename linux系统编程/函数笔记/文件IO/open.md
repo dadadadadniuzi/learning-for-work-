@@ -17,9 +17,9 @@ tags:
 
 ## 依赖头文件
 
-- #include <[[linux系统编程/函数笔记/文件IO/fcntl.md|fcntl]].h>
-- #include <sys/types.h>
-- #include <sys/stat.h>
+- `#include <fcntl.h>`
+- `#include <sys/types.h>`
+- `#include <sys/stat.h>`
 
 ## 输入参数
 

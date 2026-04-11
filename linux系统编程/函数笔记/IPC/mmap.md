@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);`
+- void \*mmap(void \*addr, [[linux系统编程/概念词条/size_t|size_t]] length, int prot, int flags, int fd, [[linux系统编程/概念词条/off_t|off_t]] offset);
 
 ## 依赖头文件
 
@@ -55,7 +55,7 @@ tags:
 ## 易错点
 
 - `PROT_*` 和 `MAP_*` 的语义不同，不要混为一谈。
-- 判断失败要和 `MAP_FAILED` 比较，而不是和 `NULL` 比较。
+- 判断失败要和 [[linux系统编程/概念词条/MAP_FAILED|MAP_FAILED]] 比较，而不是和 `NULL` 比较。
 
 ## 相关概念
 

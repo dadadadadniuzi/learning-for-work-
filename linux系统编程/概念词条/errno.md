@@ -1,4 +1,4 @@
-﻿---
+---
 title: errno
 tags:
   - linux

@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- int pthread_mutex_lock([[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] \\*mutex);
+- int pthread_mutex_lock([[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] \*mutex);
 
 ## 依赖头文件
 

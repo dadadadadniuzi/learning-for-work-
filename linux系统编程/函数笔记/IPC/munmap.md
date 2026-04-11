@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int munmap(void *addr, size_t length);`
+- int munmap(void \*addr, [[linux系统编程/概念词条/size_t|size_t]] length);
 
 ## 依赖头文件
 

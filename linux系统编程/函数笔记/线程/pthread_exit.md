@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- void [[linux系统编程/函数笔记/线程/pthread_exit.md|pthread_exit]](void \\*retval);
+- void pthread_exit(void \*retval);
 
 ## 依赖头文件
 

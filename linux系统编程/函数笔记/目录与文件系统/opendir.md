@@ -13,11 +13,11 @@ tags:
 
 ## 函数原型
 
-- [[linux系统编程/概念词条/DIR|DIR]] \\*opendir(const char \\*name);
+- [[linux系统编程/概念词条/DIR|DIR]] \*opendir(const char \*name);
 
 ## 依赖头文件
 
-- #include <[[linux系统编程/概念词条/dirent|dirent]].h>
+- `#include <dirent.h>`
 
 ## 输入参数
 
@@ -29,7 +29,7 @@ tags:
 
 ## 返回值
 
-- 成功返回 `[[linux系统编程/概念词条/DIR|DIR]] *` 目录流指针。
+- 成功返回 [[linux系统编程/概念词条/DIR|DIR]] * 目录流指针。
 - 失败返回 `NULL`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
@@ -44,7 +44,7 @@ tags:
 
 ## 易错点
 
-- 不要把 `[[linux系统编程/概念词条/DIR|DIR]] *` 当成 `int fd`。
+- 不要把 [[linux系统编程/概念词条/DIR|DIR]] * 当成 `int fd`。
 
 ## 相关概念
 

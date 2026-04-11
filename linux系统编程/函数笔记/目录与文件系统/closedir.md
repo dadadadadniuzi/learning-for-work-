@@ -13,11 +13,11 @@ tags:
 
 ## 函数原型
 
-- int closedir([[linux系统编程/概念词条/DIR|DIR]] \\*dirp);
+- int closedir([[linux系统编程/概念词条/DIR|DIR]] \*dirp);
 
 ## 依赖头文件
 
-- #include <[[linux系统编程/概念词条/dirent|dirent]].h>
+- `#include <dirent.h>`
 
 ## 输入参数
 

@@ -17,10 +17,9 @@ tags:
 
 ## 依赖头文件
 
-- #include <sys/types.h>
-- #include <sys/stat.h>
-- #include <unistd.h>
-
+- `#include <sys/types.h>`
+- `#include <sys/stat.h>`
+- `#include <unistd.h>`
 ## 输入参数
 
 - pathname：文件路径。

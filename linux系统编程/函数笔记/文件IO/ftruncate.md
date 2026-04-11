@@ -17,7 +17,7 @@ tags:
 
 ## 依赖头文件
 
-- #include <unistd.h>
+- `#include <unistd.h>`
 
 ## 输入参数
 
@@ -37,7 +37,7 @@ tags:
 
 - 它直接改文件大小，不是改偏移量。
 - 长度变短会截断文件，变长则可能产生空洞。
-- 常和 `mmap`、[[linux系统编程/函数笔记/文件IO/lseek.md|lseek]]、`open` 一起出现。
+- 常和 [[linux系统编程/函数笔记/IPC/mmap.md|mmap]]、[[linux系统编程/函数笔记/文件IO/lseek.md|lseek]]、[[linux系统编程/函数笔记/文件IO/open.md|open]] 一起出现。
 
 ## 常见用法
 

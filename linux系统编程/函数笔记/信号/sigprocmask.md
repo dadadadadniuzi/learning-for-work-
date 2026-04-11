@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- int sigprocmask(int how, const [[linux系统编程/概念词条/sigset_t|sigset_t]] \\*set, [[linux系统编程/概念词条/sigset_t|sigset_t]] \\*oldset);
+- int sigprocmask(int how, const [[linux系统编程/概念词条/sigset_t|sigset_t]] \*set, [[linux系统编程/概念词条/sigset_t|sigset_t]] \*oldset);
 
 ## 依赖头文件
 

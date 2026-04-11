@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- int [[linux系统编程/函数笔记/线程同步/[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock.md|[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock]]([[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] \\*mutex);
+- int pthread_mutex_trylock([[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]] \*mutex);
 
 ## 依赖头文件
 
@@ -34,7 +34,7 @@ tags:
 
 ## 知识点补充
 
-- `[[linux系统编程/函数笔记/线程同步/[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock.md|[[linux系统编程/概念词条/pthread_mutex_t|pthread_mutex_t]]rylock]]` 不会阻塞等待，如果锁已被占用会立刻返回失败。
+- `pthread_mutex_trylock` 不会阻塞等待，如果锁已被占用会立刻返回失败。
 - 它适合对等待不敏感的场景。
 
 ## 常见用法

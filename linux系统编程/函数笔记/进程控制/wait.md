@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- [[linux系统编程/概念词条/pid_t|pid_t]] wait(int \\*wstatus);
+- [[linux系统编程/概念词条/pid_t|pid_t]] wait(int \*wstatus);
 
 ## 依赖头文件
 

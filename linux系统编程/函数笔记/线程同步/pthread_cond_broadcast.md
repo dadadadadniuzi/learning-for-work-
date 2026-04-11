@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int pthread_cond_broadcast(pthread_cond_t *cond);`
+- int pthread_cond_broadcast([[linux系统编程/概念词条/pthread_cond_t|pthread_cond_t]] \*cond);
 
 ## 依赖头文件
 

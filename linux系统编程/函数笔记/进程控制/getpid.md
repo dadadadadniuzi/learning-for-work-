@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `pid_t getpid(void);`
+- [[linux系统编程/概念词条/pid_t|pid_t]] getpid(void);
 
 ## 依赖头文件
 

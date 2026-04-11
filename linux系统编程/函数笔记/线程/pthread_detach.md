@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int pthread_detach(pthread_t thread);`
+- int pthread_detach([[linux系统编程/概念词条/pthread_t|pthread_t]] thread);
 
 ## 依赖头文件
 

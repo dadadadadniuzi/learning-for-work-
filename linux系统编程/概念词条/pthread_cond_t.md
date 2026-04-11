@@ -1,4 +1,4 @@
-﻿---
+---
 title: pthread_cond_t
 tags:
   - linux

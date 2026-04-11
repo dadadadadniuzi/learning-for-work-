@@ -13,27 +13,27 @@ tags:
 
 ## 函数原型
 
-- int lstat(const char *pathname, struct [[linux系统编程/函数笔记/文件IO/stat.md|stat]] *statbuf);
+- int lstat(const char \*pathname, struct [[linux系统编程/概念词条/stat结构|stat]] \*statbuf);
 
 ## 依赖头文件
 
-- #include <sys/types.h>
-- #include <sys/stat.h>
-- #include <unistd.h>
+- `#include <sys/types.h>`
+- `#include <sys/stat.h>`
+- `#include <unistd.h>`
 
 ## 输入参数
 
-- pathname：文件或链接路径。
-- statbuf：输出结构体地址。
+- `pathname`：文件或链接路径。
+- `statbuf`：输出结构体地址，类型是 `struct` [[linux系统编程/概念词条/stat结构|stat]] `*`，用于接收文件状态信息。
 
 ## 输出参数
 
-- 无直接输出参数。
+- `statbuf` 会被填充为链接本身的状态信息。
 
 ## 返回值
 
-- 成功返回 0。
-- 失败返回 -1，并设置 [[linux系统编程/概念词条/errno|errno]]。
+- 成功返回 `0`。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
@@ -53,8 +53,7 @@ tags:
 
 - [[linux系统编程/概念词条/stat结构|stat结构]]
 - [[linux系统编程/概念词条/inode|inode]]
-- [[linux系统编程/概念词条/DIR|DIR]]
-- [[linux系统编程/概念词条/dirent|dirent]]
+- [[linux系统编程/概念词条/errno|errno]]
 - [[linux系统编程/概念词条/perror|perror]]
 
 ## 相关课时

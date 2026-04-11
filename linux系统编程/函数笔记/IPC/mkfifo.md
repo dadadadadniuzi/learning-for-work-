@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int mkfifo(const char *pathname, mode_t mode);`
+- int mkfifo(const char \*pathname, [[linux系统编程/概念词条/mode_t|mode_t]] mode);
 
 ## 依赖头文件
 

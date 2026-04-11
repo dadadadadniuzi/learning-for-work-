@@ -13,17 +13,17 @@ tags:
 
 ## 函数原型
 
-- s[[linux系统编程/概念词条/size_t|size_t]] write(int fd, const void *buf, [[linux系统编程/概念词条/size_t|size_t]] count);
+- [[linux系统编程/概念词条/ssize_t|ssize_t]] write(int fd, const void \*buf, [[linux系统编程/概念词条/size_t|size_t]] count);
 
 ## 依赖头文件
 
-- #include <unistd.h>
+- `#include <unistd.h>`
 
 ## 输入参数
 
-- fd：要写入的[[linux系统编程/概念词条/文件描述符|文件描述符]]。
-- buf：待写入数据缓冲区。
-- count：期望写入的字节数。
+- `fd`：要写入的[[linux系统编程/概念词条/文件描述符|文件描述符]]。
+- `buf`：待写入数据缓冲区地址，类型是 `const void \*`，表示它只负责读取这段内存，不会修改调用者提供的数据。
+- `count`：期望写入的字节数，类型是 [[linux系统编程/概念词条/size_t|size_t]]。
 
 ## 输出参数
 
@@ -31,8 +31,8 @@ tags:
 
 ## 返回值
 
-- 成功返回实际写入的字节数。
-- 失败返回 -1，并设置 [[linux系统编程/概念词条/errno|errno]]。
+- 成功返回实际写入的字节数，类型是 [[linux系统编程/概念词条/ssize_t|ssize_t]]。
+- 失败返回 `-1`，并设置 [[linux系统编程/概念词条/errno|errno]]。
 
 ## 知识点补充
 
@@ -51,6 +51,7 @@ tags:
 
 ## 相关概念
 
+- [[linux系统编程/概念词条/ssize_t|ssize_t]]
 - [[linux系统编程/概念词条/文件描述符|文件描述符]]
 - [[linux系统编程/概念词条/errno|errno]]
 - [[linux系统编程/概念词条/perror|perror]]

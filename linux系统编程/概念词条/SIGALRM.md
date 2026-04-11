@@ -1,4 +1,4 @@
-﻿---
+---
 title: SIGALRM
 tags:
   - linux

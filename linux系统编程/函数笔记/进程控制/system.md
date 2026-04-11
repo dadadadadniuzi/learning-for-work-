@@ -34,7 +34,7 @@ tags:
 
 ## 知识点补充
 
-- `system` 的内部思路通常可以理解成 `[[linux系统编程/函数笔记/进程控制/fork.md|fork]] + exec + [[linux系统编程/函数笔记/进程控制/wait.md|wait]]`。
+- `system` 的内部思路通常可以理解成 [[linux系统编程/函数笔记/进程控制/fork.md|fork]] + `exec` + [[linux系统编程/函数笔记/进程控制/wait.md|wait]] 的组合。
 - 命令字符串会经过 shell 解释，所以像重定向、管道、通配符等 shell 语法都可以使用。
 - 它方便但不够轻量，也不适合在信号处理函数里使用。
 

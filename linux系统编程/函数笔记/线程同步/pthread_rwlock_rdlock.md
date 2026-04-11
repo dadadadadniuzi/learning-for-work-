@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- int pthread_rwlock_rdlock([[linux系统编程/概念词条/pthread_rwlock_t|pthread_rwlock_t]] \\*rwlock);
+- int pthread_rwlock_rdlock([[linux系统编程/概念词条/pthread_rwlock_t|pthread_rwlock_t]] \*rwlock);
 
 ## 依赖头文件
 

@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- char \\*getcwd(char \\*buf, [[linux系统编程/概念词条/size_t|size_t]] size);
+- char \*getcwd(char \*buf, [[linux系统编程/概念词条/size_t|size_t]] size);
 
 ## 依赖头文件
 

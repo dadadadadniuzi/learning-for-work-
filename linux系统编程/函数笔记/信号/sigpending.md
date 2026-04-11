@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int sigpending(sigset_t *set);`
+- int sigpending([[linux系统编程/概念词条/sigset_t|sigset_t]] \*set);
 
 ## 依赖头文件
 

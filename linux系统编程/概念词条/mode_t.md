@@ -1,4 +1,4 @@
-﻿---
+---
 title: mode_t
 tags:
   - linux

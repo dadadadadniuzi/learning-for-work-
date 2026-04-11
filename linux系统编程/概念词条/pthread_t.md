@@ -1,4 +1,4 @@
-﻿---
+---
 title: pthread_t
 tags:
   - linux

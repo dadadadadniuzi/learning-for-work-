@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int setitimer(int which, const struct itimerval *new_value, struct itimerval *old_value);`
+- int setitimer(int which, const struct [[linux系统编程/概念词条/itimerval结构|itimerval]] \*new_value, struct [[linux系统编程/概念词条/itimerval结构|itimerval]] \*old_value);
 
 ## 依赖头文件
 
@@ -37,7 +37,7 @@ tags:
 
 ## 知识点补充
 
-- `itimerval` 结构体里有 `it_value` 和 `it_interval` 两部分，分别表示下一次触发和后续周期。
+- [[linux系统编程/概念词条/itimerval结构|itimerval]] 结构体里有 `it_value` 和 `it_interval` 两部分，分别表示下一次触发和后续周期。
 - [[linux系统编程/概念词条/setitimer类型|ITIMER_REAL]] 触发 [[linux系统编程/概念词条/SIGALRM|SIGALRM]]，[[linux系统编程/概念词条/setitimer类型|ITIMER_VIRTUAL]] 和 [[linux系统编程/概念词条/setitimer类型|ITIMER_PROF]] 则和进程运行时间相关。
 - 它比 [[linux系统编程/函数笔记/信号/alarm.md|alarm]] 更灵活，能做周期性定时。
 
