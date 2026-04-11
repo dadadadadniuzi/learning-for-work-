@@ -14,6 +14,8 @@ tags:
 ## 函数原型
 
 - `void (*signal(int signum, void (*sighandler)(int)))(int);`
+- `typedef void (*sighandler_t)(int);`
+	`sighandler_t signal(int signum, sighandler_t handler);`
 
 ## 依赖头文件
 
