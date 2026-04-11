@@ -43,7 +43,10 @@ tags:
 - 真正推荐的可控方式通常是 [[linux系统编程/函数笔记/信号/sigaction.md|sigaction]]。
 - `void (*p)(int)`表示：
 	p 是一个指针，指向“参数为 int、返回值为 void”的函数。
-	
+- `void (*sighandler)(int)`;
+	只是把变量名从 p换成了 sighandler，意思完全一样：
+	sighandler是一个指针，指向“参数为 int、返回值为 void”的函数。
+
 
 ## 常见用法
 
