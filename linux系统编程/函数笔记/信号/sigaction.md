@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- `int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);`
+- int sigaction(int signum, const struct [[linux系统编程/概念词条/sigaction结构|sigaction]] \*act, struct [[linux系统编程/概念词条/sigaction结构|sigaction]] \*oldact);
 
 ## 依赖头文件
 
@@ -37,7 +37,7 @@ tags:
 ## 知识点补充
 
 - `sigaction` 是 Linux 系统编程里设置信号处理的主力接口。
-- `struct sigaction` 里最重要的是 `sa_handler` / `sa_sigaction`、`sa_mask` 和 `sa_flags`。
+- struct [[linux系统编程/概念词条/sigaction结构|sigaction]] 里最重要的是 `sa_handler` / `sa_sigaction`、`sa_mask` 和 `sa_flags`。
 - `sa_mask` 用来定义处理某个信号时额外屏蔽哪些信号。
 - 和 [[linux系统编程/函数笔记/信号/signal.md|signal]] 相比，它更适合写出稳定的信号处理代码。
 
