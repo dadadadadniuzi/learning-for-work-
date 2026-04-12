@@ -1,4 +1,4 @@
-﻿---
+---
 title: pthread_create与pthread_self
 tags:
   - linux
