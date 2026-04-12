@@ -13,7 +13,7 @@ tags:
 
 ## 函数原型
 
-- int pthread_create([[linux系统编程/概念词条/pthread_t|pthread_t]] \*thread, const pthread_attr_t \*attr, void \*(\*start_routine)(void \*), void \*arg);
+- int pthread_create([[linux系统编程/概念词条/pthread_t|pthread_t]] \*thread, const [[linux系统编程/概念词条/pthread_attr_t|pthread_attr_t]] \*attr, void \*(\*start_routine)(void \*), void \*arg);
 
 ## 依赖头文件
 
@@ -22,7 +22,7 @@ tags:
 ## 输入参数
 
 - `thread`：输出线程 ID。
-- `attr`：线程属性，传 `NULL` 表示默认属性。
+- `attr`：线程属性对象，类型是 [[linux系统编程/概念词条/pthread_attr_t|pthread_attr_t]] `*`，传 `NULL` 表示默认属性。
 - `start_routine`：线程入口函数，参数和返回值都按 `void *` 组织。
 - `arg`：传给入口函数的参数指针。
 
@@ -53,6 +53,7 @@ tags:
 ## 相关概念
 
 - [[linux系统编程/概念词条/pthread_t|pthread_t]]
+- [[linux系统编程/概念词条/pthread_attr_t|pthread_attr_t]]
 
 ## 相关课时
 
