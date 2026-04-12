@@ -30,12 +30,14 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回错误码。
+- 失败返回错误码errno
 
 ## 知识点补充
 
 - `pthread_cancel` 发送的是“取消请求”，并不保证立刻停掉线程。
 - 默认通常是延迟取消，线程会在取消点被真正终止。
+- 如果，子线程没有到达取消点， 那么 pthread_cancel 无效。
+- [[linux系统编程/函数笔记/线程/pthread_testcancel.md|pthread_testcancel]] 可以主动制造一个取消点，让线程及时响应取消请求。
 - 是否允许取消、如何清理资源，还要配合线程自身的取消状态和清理处理。
 
 ## 常见用法
@@ -49,6 +51,7 @@ tags:
 ## 相关概念
 
 - [[linux系统编程/概念词条/pthread_t|pthread_t]]
+- [[linux系统编程/函数笔记/线程/pthread_testcancel.md|pthread_testcancel]]
 
 ## 相关课时
 
