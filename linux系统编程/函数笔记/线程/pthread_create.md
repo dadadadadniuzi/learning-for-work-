@@ -40,6 +40,7 @@ tags:
 - 新线程会和创建者共享地址空间、[[linux系统编程/概念词条/文件描述符|文件描述符]]和很多进程资源。
 - 线程入口函数的参数通常需要自己设计结构体来传递复杂数据。
 - [[linux系统编程/概念词条/pthread_t|pthread_t]] 是线程标识，不要把它当普通整数随便比较或打印。
+- 如果需要自定义线程属性，常见流程是先调用 [[linux系统编程/函数笔记/线程/pthread_attr_init.md|pthread_attr_init]]，再按需设置属性，最后把属性对象传给 `pthread_create`。
 
 ## 常见用法
 
@@ -54,6 +55,9 @@ tags:
 
 - [[linux系统编程/概念词条/pthread_t|pthread_t]]
 - [[linux系统编程/概念词条/pthread_attr_t|pthread_attr_t]]
+- [[linux系统编程/函数笔记/线程/pthread_attr_init.md|pthread_attr_init]]
+- [[linux系统编程/函数笔记/线程/pthread_attr_setdetachstate.md|pthread_attr_setdetachstate]]
+- [[linux系统编程/函数笔记/线程/pthread_attr_destroy.md|pthread_attr_destroy]]
 
 ## 相关课时
 

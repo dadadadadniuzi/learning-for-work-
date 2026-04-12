@@ -27,8 +27,12 @@ tags:
 ## 相关接口
 
 - [[linux系统编程/函数笔记/线程/pthread_create.md|pthread_create]]
+- [[linux系统编程/函数笔记/线程/pthread_attr_init.md|pthread_attr_init]]
+- [[linux系统编程/函数笔记/线程/pthread_attr_setdetachstate.md|pthread_attr_setdetachstate]]
+- [[linux系统编程/函数笔记/线程/pthread_attr_destroy.md|pthread_attr_destroy]]
 
 ## 学习建议
 
 - 入门阶段先记住：大多数示例里 `attr` 传 `NULL` 就够了。
 - 看到它时，要知道它不是线程 ID，也不是线程函数，而是“线程创建属性”。
+- 真正要用它时，最常见流程是：初始化属性 -> 设置分离态等属性 -> 创建线程 -> 销毁属性对象。
