@@ -17,8 +17,10 @@ tags:
 ## 怎么理解
 - 它通常和失败返回值一起使用。
 - 会输出你传入的前缀，再加上 `errno` 对应的系统错误描述。
+- 如果你不想直接打印，而是想自己拿到错误描述字符串，就常用 [[linux系统编程/函数笔记/标准库/strerror|strerror]]。
 
 ## 相关入口
 - [[linux系统编程/概念词条/errno|errno]]
+- [[linux系统编程/函数笔记/标准库/strerror|strerror]]
 - [[linux系统编程/函数笔记/文件IO/open|open]]
 - [[linux系统编程/函数笔记/目录与文件系统/opendir|opendir]]

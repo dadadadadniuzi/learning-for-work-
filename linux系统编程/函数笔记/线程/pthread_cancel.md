@@ -30,7 +30,7 @@ tags:
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回错误码errno
+- 失败返回错误码，不是传统的 `-1` 加 `errno` 模式；实际开发里常配合 [[linux系统编程/函数笔记/标准库/strerror|strerror]] 解释这个返回值。
 
 ## 知识点补充
 
@@ -52,6 +52,7 @@ tags:
 
 - [[linux系统编程/概念词条/pthread_t|pthread_t]]
 - [[linux系统编程/函数笔记/线程/pthread_testcancel.md|pthread_testcancel]]
+- [[linux系统编程/函数笔记/标准库/strerror|strerror]]
 
 ## 相关课时
 
