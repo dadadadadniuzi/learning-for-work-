@@ -1,4 +1,4 @@
-﻿---
+---
 title: pthread_mutex_t
 tags:
   - linux
