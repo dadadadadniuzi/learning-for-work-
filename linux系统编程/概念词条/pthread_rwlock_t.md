@@ -1,4 +1,4 @@
-﻿---
+---
 title: pthread_rwlock_t
 tags:
   - linux
