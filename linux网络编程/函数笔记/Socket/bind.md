@@ -37,7 +37,7 @@ tags:
 
 ## 知识点补充
 
-- `bind` 绑定的是服务器本机地址，不是客户端地址。
+- `bind` **绑定的是服务器本机地址，不是客户端地址**。
 - `sin_port` 要用 [[linux网络编程/函数笔记/网络字节序/htons|htons]] 转换。
 - `sin_addr.s_addr` 可使用 `htonl(INADDR_ANY)` 表示监听本机所有网卡地址。
 
