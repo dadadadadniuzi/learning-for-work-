@@ -60,12 +60,16 @@ bind(lfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 - [[linux网络编程/概念词条/socklen_t|socklen_t]]
 - [[linux网络编程/概念词条/端口|端口]]
 - [[linux网络编程/概念词条/INADDR_ANY|INADDR_ANY]]
+- [[linux网络编程/概念词条/sockaddr_un|sockaddr_un]]
+- [[linux网络编程/概念词条/路径绑定|路径绑定]]
 
 ## 相关课时
 
 - [[linux网络编程/课时笔记/02 Socket编程基础/05 socket-bind-listen-accept-connect|05 socket-bind-listen-accept-connect]]
 - [[linux网络编程/课时笔记/02 Socket编程基础/04 sockaddr与sockaddr_in结构|04 sockaddr与sockaddr_in结构]]
+- [[linux网络编程/课时笔记/06 本地套接字与通信总结/02 sockaddr_un与路径绑定|02 sockaddr_un与路径绑定]]
 
 ## 相关模块
 
 - [[linux网络编程/02 Socket编程基础|02 Socket编程基础]]
+- [[linux网络编程/06 本地套接字与通信总结|06 本地套接字与通信总结]]

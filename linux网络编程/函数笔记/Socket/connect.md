@@ -58,12 +58,16 @@ connect(cfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 - [[linux网络编程/概念词条/已连接套接字|已连接套接字]]
 - [[linux网络编程/概念词条/sockaddr|sockaddr]]
 - [[linux网络编程/概念词条/sockaddr_in|sockaddr_in]]
+- [[linux网络编程/概念词条/sockaddr_un|sockaddr_un]]
 - [[linux网络编程/概念词条/TCP|TCP]]
+- [[linux网络编程/概念词条/Unix Domain Socket|Unix Domain Socket]]
 
 ## 相关课时
 
 - [[linux网络编程/课时笔记/02 Socket编程基础/05 socket-bind-listen-accept-connect|05 socket-bind-listen-accept-connect]]
+- [[linux网络编程/课时笔记/06 本地套接字与通信总结/02 sockaddr_un与路径绑定|02 sockaddr_un与路径绑定]]
 
 ## 相关模块
 
 - [[linux网络编程/02 Socket编程基础|02 Socket编程基础]]
+- [[linux网络编程/06 本地套接字与通信总结|06 本地套接字与通信总结]]

@@ -59,12 +59,16 @@ int lfd = socket(AF_INET, SOCK_STREAM, 0);
 - [[linux网络编程/概念词条/套接字类型|套接字类型]]
 - [[linux网络编程/概念词条/TCP|TCP]]
 - [[linux网络编程/概念词条/UDP|UDP]]
+- [[linux网络编程/概念词条/AF_UNIX与AF_LOCAL|AF_UNIX与AF_LOCAL]]
+- [[linux网络编程/概念词条/Unix Domain Socket|Unix Domain Socket]]
 
 ## 相关课时
 
 - [[linux网络编程/课时笔记/02 Socket编程基础/01 套接字与socket模型|01 套接字与socket模型]]
 - [[linux网络编程/课时笔记/02 Socket编程基础/05 socket-bind-listen-accept-connect|05 socket-bind-listen-accept-connect]]
+- [[linux网络编程/课时笔记/06 本地套接字与通信总结/01 Unix Domain Socket基础|01 Unix Domain Socket基础]]
 
 ## 相关模块
 
 - [[linux网络编程/02 Socket编程基础|02 Socket编程基础]]
+- [[linux网络编程/06 本地套接字与通信总结|06 本地套接字与通信总结]]
