@@ -21,9 +21,13 @@ tags:
 - [[linux网络编程/函数笔记/Socket/socket|socket]]
 - [[linux网络编程/函数笔记/Socket/connect|connect]]
 - [[linux网络编程/函数笔记/Socket/accept|accept]]
+- [[bind]]
 - [[linux网络编程/函数笔记/Socket/send|send]]
 - [[linux网络编程/函数笔记/Socket/recv|recv]]
 - [[linux网络编程/函数笔记/Socket/read|read]]
+- [[shutdown]]
+- [[getsockopt]]
+- [[setsockopt]]
 
 ## 本模块课时
 

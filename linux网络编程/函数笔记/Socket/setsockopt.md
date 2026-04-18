@@ -9,7 +9,7 @@ tags:
 # setsockopt
 
 > [!info] 功能
-> 设置 socket 选项，端口复用、缓冲区大小、超时等行为都可以通过它配置。
+> 设置 socket 选项。网络编程中最常见的用法是开启 [[linux网络编程/概念词条/端口复用|端口复用]]，例如设置 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]] 或 [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]。
 
 ## 函数原型
 
@@ -23,37 +23,61 @@ tags:
 ## 输入参数
 
 - `sockfd`：要设置选项的 socket 文件描述符，通常由 [[linux网络编程/函数笔记/Socket/socket|socket]] 创建。设置端口复用时，一般在 `socket` 后、[[linux网络编程/函数笔记/Socket/bind|bind]] 前使用。
-- `level`：选项所在协议层。通用 socket 层选项使用 [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]]。
-- `optname`：具体要设置的选项名称。端口复用常用 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]，有些场景也会见到 [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]。
-- `optval`：指向选项值的指针。设置布尔类选项时常用 `int opt = 1;`，再传 `&opt`。
-- `optlen`：`optval` 指向数据的大小，类型是 [[linux网络编程/概念词条/socklen_t|socklen_t]]。传 `sizeof(opt)` 最常见。
+- `level`：选项所在协议层。端口复用属于通用 socket 层选项，通常传 [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]]。
+- `optname`：具体选项名称。端口复用常用 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]；多进程负载分担场景可能使用 [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]。
+- `optval`：指向选项值的指针。布尔类选项通常定义 `int opt = 1;` 表示开启，再传 `&opt`；如果要关闭，可传值为 `0` 的整数地址。
+- `optlen`：`optval` 指向数据的大小，类型是 [[linux网络编程/概念词条/socklen_t|socklen_t]]。布尔类 `int` 选项常传 `sizeof(opt)`。
 
 ## 输出参数
 
-- 无直接输出参数。
+- 无直接输出参数。函数通过返回值表示是否设置成功。
 
 ## 返回值
 
 - 成功返回 `0`。
-- 失败返回 `-1`，并设置错误信息。
+- 失败返回 `-1`，并设置 `errno`。
 
-## 知识点补充
-
-- 端口复用不是 `bind` 的参数，而是通过 `setsockopt` 设置 socket 选项。
-- 对服务器调试来说，最常见用途是避免程序重启后端口暂时无法绑定。
-- 设置端口复用的位置很重要，通常必须在 `bind` 前。
-
-## 常见用法
+## 端口复用典型用法
 
 ```c
+int lfd = socket(AF_INET, SOCK_STREAM, 0);
+
 int opt = 1;
-setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+int ret = setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+if (ret == -1) {
+    perror("setsockopt");
+}
+
+bind(lfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 ```
+
+## 为什么要在 bind 前调用
+
+[[linux网络编程/函数笔记/Socket/bind|bind]] 会执行地址和端口绑定检查。如果绑定检查之前没有告诉内核“允许复用”，那么这次 `bind` 仍可能因为地址占用失败。
+
+因此端口复用的顺序通常是：
+
+```text
+socket -> setsockopt -> bind -> listen
+```
+
+## 常见端口复用选项
+
+- [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]：常用于服务重启后快速重新绑定端口。
+- [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]：允许多个 socket 绑定同一 IP 和端口，适合多进程负载分担。
+
+## 和 getsockopt 的关系
+
+- `setsockopt`：设置选项。
+- [[linux网络编程/函数笔记/Socket/getsockopt|getsockopt]]：读取选项。
+
+调试时如果怀疑选项没生效，可以用 `getsockopt` 查询。
 
 ## 易错点
 
 - `optval` 要传地址，不能直接传整数 `1`。
 - `optlen` 要和 `optval` 指向的数据大小一致。
+- 必须检查返回值，否则设置失败了也可能继续执行到 `bind`。
 - 设置端口复用后仍可能因为其他活跃进程真正占用端口而绑定失败。
 
 ## 相关概念
@@ -63,6 +87,14 @@ setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 - [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]
 - [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]
 - [[linux网络编程/概念词条/socklen_t|socklen_t]]
+- [[linux网络编程/概念词条/TIME_WAIT|TIME_WAIT]]
+
+## 相关函数
+
+- [[linux网络编程/函数笔记/Socket/getsockopt|getsockopt]]
+- [[linux网络编程/函数笔记/Socket/socket|socket]]
+- [[linux网络编程/函数笔记/Socket/bind|bind]]
+- [[linux网络编程/函数笔记/Socket/listen|listen]]
 
 ## 相关课时
 

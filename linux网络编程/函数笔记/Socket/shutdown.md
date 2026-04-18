@@ -44,6 +44,7 @@ tags:
 - `shutdown(fd, SHUT_WR)` 是学习 [[linux网络编程/概念词条/TCP半关闭|TCP半关闭]] 的重点。
 - 对端读完剩余数据后，`read/recv` 通常返回 `0`，表示本端写方向已经关闭。
 - `shutdown` 作用于 socket 连接方向；`close` 作用于文件描述符引用。一个 socket 被多个 fd 引用时，`shutdown` 的语义更直接。
+- shutdown在关闭多个文件描述符应用的文件时，采用全关闭方法。close，只关闭一个。
 
 ## 常见用法
 
