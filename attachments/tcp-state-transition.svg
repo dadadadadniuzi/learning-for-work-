@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2200" viewBox="0 0 1600 2200">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f3437"/>
+    </marker>
+    <style>
+      .title { font: 700 54px "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: #1f2328; }
+      .section { font: 700 26px "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: #1f2328; }
+      .state { fill: #ffffff; stroke: #2f3437; stroke-width: 3; }
+      .stateText { font: 700 24px Consolas, "Microsoft YaHei", sans-serif; fill: #1f2328; }
+      .label { font: 20px "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: #2f3437; }
+      .small { font: 18px "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: #4b5563; }
+      .arrow { fill: none; stroke: #2f3437; stroke-width: 3; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #6b7280; stroke-width: 3; stroke-dasharray: 10 8; marker-end: url(#arrow); }
+      .group { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 12 8; }
+      .note { fill: #fff8dc; stroke: #d6a100; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="2200" fill="#fbfbf8"/>
+  <text x="800" y="90" text-anchor="middle" class="title">TCP 状态转换图</text>
+  <text x="800" y="135" text-anchor="middle" class="small">主动打开 / 被动打开 / 三次握手 / 主动关闭 / 被动关闭 / 同时打开 / 同时关闭</text>
+
+  <!-- states -->
+  <rect x="640" y="180" width="230" height="78" rx="36" class="state"/>
+  <text x="755" y="228" text-anchor="middle" class="stateText">CLOSED</text>
+
+  <rect x="640" y="390" width="230" height="78" rx="36" class="state"/>
+  <text x="755" y="438" text-anchor="middle" class="stateText">LISTEN</text>
+
+  <rect x="1040" y="550" width="250" height="78" rx="36" class="state"/>
+  <text x="1165" y="598" text-anchor="middle" class="stateText">SYN_SENT</text>
+
+  <rect x="220" y="550" width="250" height="78" rx="36" class="state"/>
+  <text x="345" y="598" text-anchor="middle" class="stateText">SYN_RCVD</text>
+
+  <rect x="630" y="810" width="250" height="78" rx="36" class="state"/>
+  <text x="755" y="858" text-anchor="middle" class="stateText">ESTABLISHED</text>
+
+  <rect x="200" y="1120" width="250" height="78" rx="36" class="state"/>
+  <text x="325" y="1168" text-anchor="middle" class="stateText">FIN_WAIT_1</text>
+
+  <rect x="200" y="1450" width="250" height="78" rx="36" class="state"/>
+  <text x="325" y="1498" text-anchor="middle" class="stateText">FIN_WAIT_2</text>
+
+  <rect x="640" y="1320" width="230" height="78" rx="36" class="state"/>
+  <text x="755" y="1368" text-anchor="middle" class="stateText">CLOSING</text>
+
+  <rect x="625" y="1620" width="260" height="78" rx="36" class="state"/>
+  <text x="755" y="1668" text-anchor="middle" class="stateText">TIME_WAIT</text>
+
+  <rect x="1080" y="930" width="250" height="78" rx="36" class="state"/>
+  <text x="1205" y="978" text-anchor="middle" class="stateText">CLOSE_WAIT</text>
+
+  <rect x="1080" y="1230" width="250" height="78" rx="36" class="state"/>
+  <text x="1205" y="1278" text-anchor="middle" class="stateText">LAST_ACK</text>
+
+  <!-- active/passive group labels -->
+  <rect x="95" y="1060" width="870" height="720" rx="24" class="group"/>
+  <text x="145" y="1740" class="section">主动关闭路径</text>
+
+  <rect x="1015" y="870" width="390" height="520" rx="24" class="group"/>
+  <text x="1050" y="1360" class="section">被动关闭路径</text>
+
+  <!-- open paths -->
+  <path d="M 755 258 L 755 390" class="dash"/>
+  <text x="805" y="325" class="label">应用：被动打开</text>
+  <text x="805" y="352" class="small">listen 后进入 LISTEN</text>
+
+  <path d="M 870 220 C 1040 250, 1165 370, 1165 550" class="arrow"/>
+  <text x="1085" y="315" class="label">应用：主动打开</text>
+  <text x="1085" y="342" class="small">发送 SYN</text>
+
+  <path d="M 640 430 C 520 445, 410 490, 345 550" class="arrow"/>
+  <text x="420" y="450" class="label">接收 SYN</text>
+  <text x="420" y="477" class="small">发送 SYN + ACK</text>
+
+  <path d="M 1039 588 L 470 588" class="arrow"/>
+  <text x="660" y="555" class="label">同时打开：接收 SYN，发送 SYN + ACK</text>
+
+  <path d="M 345 628 C 410 740, 550 810, 630 845" class="arrow"/>
+  <text x="405" y="715" class="label">接收 ACK</text>
+  <text x="405" y="742" class="small">连接建立</text>
+
+  <path d="M 1065 628 C 980 730, 890 800, 880 845" class="arrow"/>
+  <text x="935" y="735" class="label">接收 SYN + ACK</text>
+  <text x="935" y="762" class="small">发送 ACK</text>
+
+  <path d="M 220 570 C 130 540, 90 470, 120 400 C 155 310, 420 260, 640 225" class="arrow"/>
+  <text x="110" y="465" class="label" transform="rotate(-38 110 465)">接收 RST，回到 LISTEN/CLOSED</text>
+
+  <!-- established data state note -->
+  <rect x="575" y="915" width="360" height="86" rx="16" class="note"/>
+  <text x="755" y="948" text-anchor="middle" class="label">ESTABLISHED</text>
+  <text x="755" y="978" text-anchor="middle" class="small">数据传输状态：read/write/send/recv</text>
+
+  <!-- active close -->
+  <path d="M 630 865 C 510 920, 400 1020, 325 1120" class="arrow"/>
+  <text x="405" y="1005" class="label">应用：close</text>
+  <text x="405" y="1032" class="small">发送 FIN</text>
+
+  <path d="M 325 1198 L 325 1450" class="arrow"/>
+  <text x="355" y="1320" class="label">接收 ACK</text>
+  <text x="355" y="1347" class="small">发送：无</text>
+
+  <path d="M 450 1490 C 545 1535, 630 1585, 700 1620" class="arrow"/>
+  <text x="520" y="1518" class="label">接收 FIN</text>
+  <text x="520" y="1545" class="small">发送 ACK</text>
+
+  <path d="M 450 1160 C 555 1210, 660 1270, 715 1320" class="arrow"/>
+  <text x="540" y="1195" class="label">同时关闭</text>
+  <text x="540" y="1222" class="small">接收 FIN，发送 ACK</text>
+
+  <path d="M 755 1398 L 755 1620" class="arrow"/>
+  <text x="790" y="1510" class="label">接收 ACK</text>
+  <text x="790" y="1537" class="small">进入 TIME_WAIT</text>
+
+  <path d="M 625 1659 C 490 1660, 385 1590, 325 1528" class="arrow"/>
+  <text x="450" y="1628" class="label">接收 FIN + ACK</text>
+  <text x="450" y="1655" class="small">发送 ACK，可直接 TIME_WAIT</text>
+
+  <path d="M 885 1659 C 1220 1660, 1450 1420, 1450 250 C 1450 205, 1100 190, 870 215" class="arrow"/>
+  <text x="1110" y="1615" class="label">2MSL 超时</text>
+  <text x="1110" y="1642" class="small">TIME_WAIT -> CLOSED</text>
+
+  <!-- passive close -->
+  <path d="M 880 850 C 980 865, 1110 890, 1205 930" class="arrow"/>
+  <text x="1015" y="835" class="label">接收 FIN</text>
+  <text x="1015" y="862" class="small">发送 ACK</text>
+
+  <path d="M 1205 1008 L 1205 1230" class="dash"/>
+  <text x="1240" y="1120" class="label">应用：close</text>
+  <text x="1240" y="1147" class="small">发送 FIN</text>
+
+  <path d="M 1205 1308 C 1205 1530, 1020 1780, 870 215" class="arrow"/>
+  <text x="1280" y="1495" class="label">接收 ACK</text>
+  <text x="1280" y="1522" class="small">回到 CLOSED</text>
+
+  <!-- listen close -->
+  <path d="M 870 430 C 1080 430, 1340 310, 870 220" class="arrow"/>
+  <text x="1055" y="400" class="label">应用：close</text>
+  <text x="1055" y="427" class="small">LISTEN -> CLOSED</text>
+
+  <!-- legend -->
+  <rect x="135" y="1865" width="1330" height="210" rx="20" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+  <text x="170" y="1910" class="section">读图提示</text>
+  <text x="170" y="1950" class="label">1. 主动打开通常是客户端 connect：CLOSED -> SYN_SENT -> ESTABLISHED。</text>
+  <text x="170" y="1985" class="label">2. 被动打开通常是服务器 listen/accept：CLOSED -> LISTEN -> SYN_RCVD -> ESTABLISHED。</text>
+  <text x="170" y="2020" class="label">3. 主动关闭通常经历 FIN_WAIT_1、FIN_WAIT_2、TIME_WAIT；被动关闭通常经历 CLOSE_WAIT、LAST_ACK。</text>
+  <text x="170" y="2055" class="label">4. TIME_WAIT 出现在主动关闭方，用于等待 2MSL，避免最后 ACK 丢失和旧报文干扰新连接。</text>
+</svg>
