@@ -8,7 +8,7 @@ tags:
 ---
 # TCP通信时序与代码对应关系
 
-这张笔记用来把 TCP 客户端代码、服务器代码、[[linux网络编程/概念词条/TCP三次握手|TCP三次握手]]、数据收发、[[linux网络编程/概念词条/TCP四次挥手|TCP四次挥手]] 和 TCP 状态变化放在同一条时间线上理解。
+这张笔记用来把 TCP 客户端代码、服务器代码、[[linux网络编程/概念词条/TCP三次握手|TCP三次握手]]、数据收发、[[linux网络编程/概念词条/TCP四次挥手|TCP四次挥手]] 和 TCP 状态变化放在同一条时间线上理解。[[tcp.png]]
 
 如果想看更完整的 TCP 状态机，包括同时打开、同时关闭、`CLOSING` 等少见路径，见 [[linux网络编程/概念词条/TCP状态转换图|TCP状态转换图]]。
 
@@ -71,7 +71,7 @@ sequenceDiagram
     Note over ST: LAST_ACK
     ST->>CT: FIN
     CT->>ST: ACK
-    Note over CT: TIME_WAIT -> CLOSED
+    Note over CT: TIME_WAIT 等待 2MSL -> CLOSED
     Note over ST: CLOSED
 ```
 
@@ -94,7 +94,7 @@ sequenceDiagram
 | 客户端主动关闭      | `close(fd)`                 | `FIN_WAIT_1`  | `FIN`       | `CLOSE_WAIT`  | `read(connfd, ...)`         | 客户端表示自己不再发送数据。                         |
 | 服务器确认关闭请求    | 无                           | `FIN_WAIT_2`  | `ACK`       | `CLOSE_WAIT`  | `read` 返回 `0`               | 服务器应用层读到 `0`，表示客户端正常关闭发送方向。            |
 | 服务器关闭        | 无                           | `FIN_WAIT_2`  | `FIN`       | `LAST_ACK`    | `close(connfd)`             | 服务器也关闭连接，发送 FIN。                       |
-| 客户端最终确认      | 无                           | `TIME_WAIT`   | `ACK`       | `CLOSED`      | 无                           | 客户端发送最后 ACK，等待一段时间后进入 `CLOSED`。        |
+| 客户端最终确认      | 无                           | `TIME_WAIT`   | `ACK`       | `CLOSED`      | 无                           | 客户端发送最后 ACK，等待 [[linux网络编程/概念词条/MSL|2MSL]] 后进入 `CLOSED`。        |
 
 ## 客户端代码骨架
 
@@ -157,6 +157,8 @@ close(listenfd);
 - [[linux网络编程/概念词条/TCP数据包格式|TCP数据包格式]]
 - [[linux网络编程/概念词条/TCP滑动窗口|TCP滑动窗口]]
 - [[linux网络编程/概念词条/TCP状态转换图|TCP状态转换图]]
+- [[linux网络编程/概念词条/MSL|MSL]]
+- [[linux网络编程/概念词条/TIME_WAIT|TIME_WAIT]]
 - [[linux网络编程/概念词条/监听套接字|监听套接字]]
 - [[linux网络编程/概念词条/已连接套接字|已连接套接字]]
 

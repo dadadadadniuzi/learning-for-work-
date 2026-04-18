@@ -108,6 +108,10 @@
   <text x="520" y="1518" class="label">接收 FIN</text>
   <text x="520" y="1545" class="small">发送 ACK</text>
 
+  <path d="M 410 1192 C 505 1320, 585 1510, 665 1620" class="arrow"/>
+  <text x="565" y="1370" class="label">接收 FIN + ACK</text>
+  <text x="565" y="1397" class="small">发送 ACK，直接 TIME_WAIT</text>
+
   <path d="M 450 1160 C 555 1210, 660 1270, 715 1320" class="arrow"/>
   <text x="540" y="1195" class="label">同时关闭</text>
   <text x="540" y="1222" class="small">接收 FIN，发送 ACK</text>
@@ -115,10 +119,6 @@
   <path d="M 755 1398 L 755 1620" class="arrow"/>
   <text x="790" y="1510" class="label">接收 ACK</text>
   <text x="790" y="1537" class="small">进入 TIME_WAIT</text>
-
-  <path d="M 625 1659 C 490 1660, 385 1590, 325 1528" class="arrow"/>
-  <text x="450" y="1628" class="label">接收 FIN + ACK</text>
-  <text x="450" y="1655" class="small">发送 ACK，可直接 TIME_WAIT</text>
 
   <path d="M 885 1659 C 1220 1660, 1450 1420, 1450 250 C 1450 205, 1100 190, 870 215" class="arrow"/>
   <text x="1110" y="1615" class="label">2MSL 超时</text>
