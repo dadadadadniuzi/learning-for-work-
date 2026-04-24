@@ -11,6 +11,7 @@ tags:
 ## 本章目标
 
 - 理解 [[linux网络编程/概念词条/Libevent|Libevent]] 是对底层 [[linux网络编程/概念词条/IO多路复用|IO多路复用]] 和事件循环的封装。
+- 理解 [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]] 与 Libevent 的关系：事件循环等待事件，事件就绪后调用回调。
 - 掌握 [[linux网络编程/概念词条/event_base|event_base]]、[[linux网络编程/概念词条/event|event]]、[[linux网络编程/概念词条/bufferevent|bufferevent]]、[[linux网络编程/概念词条/evconnlistener|evconnlistener]] 的分工。
 - 学会普通 `event` 的创建、添加、事件循环和释放流程。
 - 学会 `bufferevent` 的创建、回调设置、读写使能、读写数据和释放流程。
@@ -48,6 +49,7 @@ tags:
 ## 本模块概念
 
 - [[linux网络编程/概念词条/Libevent|Libevent]]
+- [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]]
 - [[linux网络编程/概念词条/event_base|event_base]]
 - [[linux网络编程/概念词条/event|event]]
 - [[linux网络编程/概念词条/event_callback_fn|event_callback_fn]]
@@ -78,6 +80,7 @@ tags:
 ## 细节补充
 
 - Libevent 的普通事件流程是：先创建 [[linux网络编程/函数笔记/Libevent/event_base_new|event_base_new]]，再用 [[linux网络编程/函数笔记/Libevent/event_new|event_new]] 创建事件，用 [[linux网络编程/函数笔记/Libevent/event_add|event_add]] 加入监听，最后用 [[linux网络编程/函数笔记/Libevent/event_base_dispatch|event_base_dispatch]] 启动循环。
+- Libevent 可以理解成 Reactor 风格的库：[[linux网络编程/概念词条/event_base|event_base]] 负责事件循环，事件就绪后调用 [[linux网络编程/概念词条/事件回调函数|事件回调函数]]。
 - [[linux网络编程/概念词条/event|event]] 适合直接监听 fd 的读写事件；[[linux网络编程/概念词条/bufferevent|bufferevent]] 在 fd 上封装了读写缓冲区和回调，更适合 TCP 通信。
 - [[linux网络编程/函数笔记/Libevent/evconnlistener_new_bind|evconnlistener_new_bind]] 帮服务端封装了传统 [[linux网络编程/函数笔记/Socket/socket|socket]]、[[linux网络编程/函数笔记/Socket/bind|bind]]、[[linux网络编程/函数笔记/Socket/listen|listen]]、[[linux网络编程/函数笔记/Socket/accept|accept]] 流程。
 - 编译使用 Libevent 的程序时，通常需要链接 `-levent`。
@@ -85,6 +88,7 @@ tags:
 ## 复习路线
 
 - 先理解 `event_base + event + event_base_dispatch`。
+- 再把这个流程对应到 [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]]：注册事件、等待事件、分发回调。
 - 再理解事件状态：[[linux网络编程/概念词条/事件的未决与非未决|未决与非未决]]。
 - 然后学习 [[linux网络编程/概念词条/bufferevent|bufferevent]] 的读写回调和缓冲区。
 - 最后把 [[linux网络编程/概念词条/evconnlistener|evconnlistener]] 和 [[linux网络编程/概念词条/bufferevent|bufferevent]] 组合成完整服务端流程。

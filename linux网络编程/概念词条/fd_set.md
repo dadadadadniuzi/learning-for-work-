@@ -56,6 +56,7 @@ int select(int nfds,
 - `readfds`：读集合，监听哪些 fd 是否可读。
 - `writefds`：写集合，监听哪些 fd 是否可写。
 - `exceptfds`：异常集合，监听哪些 fd 是否出现异常状态。
+- `timeout`：超时时间，类型是 [[linux网络编程/概念词条/struct timeval|struct timeval]] 指针。
 
 如果某类事件不关心，可以传 `NULL`。
 
@@ -142,6 +143,7 @@ while (1) {
 - [[linux网络编程/概念词条/IO多路复用|IO多路复用]]
 - [[linux网络编程/概念词条/事件就绪|事件就绪]]
 - [[linux网络编程/概念词条/FD_SETSIZE|FD_SETSIZE]]
+- [[linux网络编程/概念词条/struct timeval|struct timeval]]
 - [[linux网络编程/概念词条/pollfd|pollfd]]
 
 ## 相关课时

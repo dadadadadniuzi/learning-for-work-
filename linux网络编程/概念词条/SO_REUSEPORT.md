@@ -44,10 +44,10 @@ setsockopt(lfd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt));
 
 ## 和 SO_REUSEADDR 的区别
 
-| 选项 | 重点 | 课程中怎么记 |
-|---|---|---|
-| [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]] | 地址复用，重点缓解服务器重启后的绑定失败 | 常见于“端口被 TIME_WAIT 影响，重启 bind 失败” |
-| [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]] | 端口复用，重点允许多个 socket 绑定同一个端口 | 常见于“多个 worker 共同监听一个端口” |
+| 选项               | 重点             | 课程中怎么记                     |                                  |
+| ---------------- | -------------- | -------------------------- | -------------------------------- |
+| [[SO_REUSEADDR]] | SO_REUSEADDR]] | 地址复用，重点缓解服务器重启后的绑定失败       | 常见于“端口被 TIME_WAIT 影响，重启 bind 失败” |
+| [[SO_REUSEPORT]] | SO_REUSEPORT]] | 端口复用，重点允许多个 socket 绑定同一个端口 | 常见于“多个 worker 共同监听一个端口”          |
 
 ## 易错点
 

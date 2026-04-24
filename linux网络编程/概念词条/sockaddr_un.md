@@ -39,7 +39,10 @@ struct sockaddr_un addr;
 memset(&addr, 0, sizeof(addr));
 addr.sun_family = AF_UNIX;
 strcpy(addr.sun_path, "server.sock");
-bind(fd, (struct sockaddr *)&addr, sizeof(addr));
+len = offsetof(struct sockaddr_un, sun_path) + strlen(servaddr.sun_path);
+（因为len才是实际用的空间，sizeof是开辟的空间）
+unlink(SERV_ADDR);  /* 确保bind之前serv.sock文件不存在,bind会创建该文件 */
+bind(fd, (struct sockaddr *)&addr, len);
 ```
 
 ## 易错点

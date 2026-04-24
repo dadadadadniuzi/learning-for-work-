@@ -49,6 +49,7 @@ tags:
 ## 本节关键概念
 
 - [[linux网络编程/概念词条/Unix Domain Socket|Unix Domain Socket]]
+- [[本地套接字和网络套接字对比]]
 - [[linux网络编程/概念词条/AF_UNIX与AF_LOCAL|AF_UNIX与AF_LOCAL]]
 - [[linux网络编程/概念词条/sockaddr_un|sockaddr_un]]
 - [[linux网络编程/概念词条/本地通信|本地通信]]

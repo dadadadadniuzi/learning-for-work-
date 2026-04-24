@@ -22,6 +22,7 @@ tags:
 - `select/poll` 每次都把完整集合交给内核。
 - `epoll` 把关注的 fd 保存在内核中，应用程序每次只需要等待就绪事件。
 - `epoll_wait` 返回的是已经就绪的事件数组，减少无效扫描。
+- 在服务器设计中，epoll 常作为 [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]] 的底层事件分离器。
 
 ## 常见事件
 
@@ -35,8 +36,10 @@ tags:
 
 - epoll 高效不代表代码一定简单。
 - 边沿触发通常要配合非阻塞 IO，否则容易漏读或阻塞。
+- epoll 是机制，Reactor 是用这种机制组织事件循环和回调处理的模式。
 
 ## 常见出现位置
 
 - [[linux网络编程/课时笔记/05 IO多路复用/03 epoll|03 epoll]]
 - [[linux网络编程/函数笔记/IO多路复用/epoll_create|epoll_create]]
+- [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]]

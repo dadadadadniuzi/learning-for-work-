@@ -9,7 +9,7 @@ tags:
 # poll
 
 > [!info] 功能
-> 使用 `pollfd` 数组监听多个 fd 的事件就绪状态。
+> 使用 [[linux网络编程/概念词条/pollfd|struct pollfd]] 数组监听多个 fd 的事件就绪状态。
 
 ## 函数原型
 
@@ -21,8 +21,8 @@ tags:
 
 ## 输入参数
 
-- `fds`：`pollfd` 数组首地址。数组中每个元素描述一个要监听的 fd、关心事件和返回事件。
-- `nfds`：数组中有效元素数量，类型是 `nfds_t`。
+- `fds`：[[linux网络编程/概念词条/pollfd|struct pollfd]] 数组首地址。数组中每个元素描述一个要监听的 fd、关心事件和返回事件。
+- `nfds`：数组中要检查的元素数量，类型是 [[linux网络编程/概念词条/nfds_t|nfds_t]]。注意它不是最大 fd 加 1。
 - `timeout`：超时时间，单位毫秒。`-1` 表示一直阻塞，`0` 表示立即返回，正数表示最多等待指定毫秒数。
 
 ## 输出参数
@@ -37,9 +37,15 @@ tags:
 
 ## 知识点补充
 
-- `poll` 用数组替代 `fd_set`。
+- `poll` 用 [[linux网络编程/概念词条/pollfd|struct pollfd]] 数组替代 [[linux网络编程/概念词条/fd_set|fd_set]]。
 - `events` 是用户设置的关注事件，`revents` 是内核返回的实际事件。
-- 常见读事件是 `POLLIN`。
+- 常见读事件是 [[linux网络编程/概念词条/poll事件宏|POLLIN]]。
+- 优点：
+	自带数组结构。 可以将 监听事件集合 和 返回事件集合 分离。
+	拓展 监听上限。 超出 1024限制。
+	缺点：
+	不能跨平台。 Linux
+	无法直接定位满足监听事件的文件描述符， 编码难度较大。
 
 ## 常见用法
 
@@ -52,7 +58,7 @@ int nready = poll(fds, max_index + 1, -1);
 
 ## 易错点
 
-- `nfds` 是数组元素数量，不是最大 fd 加 1。
+- [[linux网络编程/概念词条/nfds_t|nfds_t]] 参数 `nfds` 是数组元素数量，不是最大 fd 加 1。
 - 返回后仍然需要遍历数组检查 `revents`。
 - 不用的元素可以把 `fd` 设为 `-1`。
 
@@ -60,6 +66,8 @@ int nready = poll(fds, max_index + 1, -1);
 
 - [[linux网络编程/概念词条/poll模型|poll模型]]
 - [[linux网络编程/概念词条/pollfd|pollfd]]
+- [[linux网络编程/概念词条/nfds_t|nfds_t]]
+- [[linux网络编程/概念词条/poll事件宏|poll事件宏]]
 - [[linux网络编程/概念词条/事件就绪|事件就绪]]
 
 ## 相关课时

@@ -22,8 +22,8 @@ tags:
 ## 在 socket 中的典型位置
 
 - `socket(AF_INET, SOCK_DGRAM, 0)` 通常创建 UDP 套接字。
-- UDP 常配合 `sendto`、`recvfrom` 使用。
-- 后续如果课程进入 UDP 编程，需要重点关注“目标地址”和“数据报边界”。
+- UDP 常配合 [[linux网络编程/函数笔记/Socket/sendto|sendto]]、[[linux网络编程/函数笔记/Socket/recvfrom|recvfrom]] 使用。
+- UDP 编程需要重点关注“目标地址”“来源地址”和“数据报边界”，流程见 [[linux网络编程/概念词条/UDP通信流程|UDP通信流程]]。
 - UDP 数据报会被封装进 [[linux网络编程/概念词条/IP数据报格式|IP数据报格式]] 的数据部分。
 
 ## 和 TCP 的区别
@@ -41,5 +41,7 @@ tags:
 
 - [[linux网络编程/01 网络基础|01 网络基础]]
 - [[linux网络编程/02 Socket编程基础|02 Socket编程基础]]
+- [[linux网络编程/课时笔记/03 TCP通信与通信案例/03 UDP通信案例|03 UDP通信案例]]
+- [[linux网络编程/概念词条/UDP通信流程|UDP通信流程]]
 - [[linux网络编程/概念词条/UDP数据报格式|UDP数据报格式]]
 - [[linux网络编程/概念词条/IP数据报格式|IP数据报格式]]

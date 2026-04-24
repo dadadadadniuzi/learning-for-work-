@@ -22,13 +22,13 @@ tags:
 ## 输入参数
 
 - `epfd`：`epoll_create` 返回的 epoll 文件描述符。
-- `events`：接收就绪事件的数组首地址。
+- `events`：接收就绪事件的数组首地址，元素类型是 [[linux网络编程/概念词条/epoll_event|struct epoll_event]]。
 - `maxevents`：`events` 数组最多能容纳的事件数量，必须大于 0。
 - `timeout`：超时时间，单位毫秒。`-1` 表示一直阻塞，`0` 表示立即返回，正数表示最多等待指定毫秒数。
 
 ## 输出参数
 
-- `events`：成功返回时，前若干个元素保存已经就绪的事件。
+- `events`：成功返回时，前若干个元素保存已经就绪的事件。常通过其中的 [[linux网络编程/概念词条/epoll_data_t|epoll_data_t]] 数据判断对应 fd 或连接对象。
 
 ## 返回值
 
@@ -38,8 +38,8 @@ tags:
 
 ## 知识点补充
 
-- 返回值 `n` 表示 `events[0]` 到 `events[n-1]` 有效。
-- 常通过 `events[i].data.fd` 判断哪个 fd 就绪。
+- **返回值 `n` 表示 `events[0]` 到 `events[n-1]` 有效。**
+- 常通过 `events[i].data.fd` 判断哪个 fd 就绪，其中 `data` 的类型是 [[linux网络编程/概念词条/epoll_data_t|epoll_data_t]]。
 
 ## 常见用法
 
@@ -57,6 +57,7 @@ int nready = epoll_wait(epfd, events, 1024, -1);
 
 - [[linux网络编程/概念词条/epoll模型|epoll模型]]
 - [[linux网络编程/概念词条/epoll_event|epoll_event]]
+- [[linux网络编程/概念词条/epoll_data_t|epoll_data_t]]
 - [[linux网络编程/概念词条/事件就绪|事件就绪]]
 
 ## 相关课时

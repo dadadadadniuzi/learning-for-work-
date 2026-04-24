@@ -22,6 +22,10 @@ tags:
 
 ```c
 strcpy(addr.sun_path, "server.sock");
+
+服务器接受信息时
+ len -= offsetof(struct sockaddr_un, sun_path);      /* 得到文件名的长度 */  
+         cliaddr.sun_path[len] = '\0';                /* 确保打印时,没有乱码出现 */
 ```
 
 ## 易错点

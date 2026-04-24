@@ -9,11 +9,11 @@ tags:
 
 ## 它是什么
 
-- poll 模型是使用 `pollfd` 数组监听多个 fd 的 IO 多路复用模型。
+- poll 模型是使用 [[linux网络编程/概念词条/pollfd|struct pollfd]] 数组监听多个 fd 的 IO 多路复用模型。
 
 ## 工作流程
 
-- 准备 `pollfd` 数组。
+- 准备 [[linux网络编程/概念词条/pollfd|struct pollfd]] 数组。
 - 每个元素设置一个 fd 和关心的事件。
 - 调用 `poll` 等待事件。
 - 遍历数组检查 `revents`。

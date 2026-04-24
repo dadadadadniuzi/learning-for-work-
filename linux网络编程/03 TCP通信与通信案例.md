@@ -13,6 +13,7 @@ tags:
 - 串起 TCP 服务器端和客户端的基本通信流程。
 - 理解连接建立后，双方如何通过[[linux网络编程/概念词条/已连接套接字|已连接套接字]]读写数据。
 - 通过“小写转大写”案例理解[[linux网络编程/概念词条/阻塞式IO|阻塞式 IO]] 下的 TCP 通信。
+- 通过 UDP 小写转大写或回显案例理解无连接数据报通信。
 - 学会使用 [[linux网络编程/指令查询/命令卡/nc|nc]] 快速测试 TCP 服务端。
 - 为后续[[linux网络编程/04 高并发服务器|高并发服务器]]和[[linux网络编程/05 IO多路复用|IO 多路复用]]做准备。
 
@@ -21,18 +22,21 @@ tags:
 - [[linux网络编程/函数笔记/Socket/socket|socket]]
 - [[linux网络编程/函数笔记/Socket/connect|connect]]
 - [[linux网络编程/函数笔记/Socket/accept|accept]]
-- [[bind]]
+- [[linux网络编程/函数笔记/Socket/bind|bind]]
 - [[linux网络编程/函数笔记/Socket/send|send]]
 - [[linux网络编程/函数笔记/Socket/recv|recv]]
+- [[linux网络编程/函数笔记/Socket/sendto|sendto]]
+- [[linux网络编程/函数笔记/Socket/recvfrom|recvfrom]]
 - [[linux网络编程/函数笔记/Socket/read|read]]
-- [[shutdown]]
-- [[getsockopt]]
-- [[setsockopt]]
+- [[linux网络编程/函数笔记/Socket/shutdown|shutdown]]
+- [[linux网络编程/函数笔记/Socket/getsockopt|getsockopt]]
+- [[linux网络编程/函数笔记/Socket/setsockopt|setsockopt]]
 
 ## 本模块课时
 
 - [[linux网络编程/课时笔记/03 TCP通信与通信案例/01 TCP通信基础案例|01 TCP通信基础案例]]
 - [[linux网络编程/课时笔记/03 TCP通信与通信案例/02 客户端与服务器通信流程|02 客户端与服务器通信流程]]
+- [[linux网络编程/课时笔记/03 TCP通信与通信案例/03 UDP通信案例|03 UDP通信案例]]
 
 ## 本模块概念
 
@@ -45,6 +49,9 @@ tags:
 - [[linux网络编程/概念词条/TCP通信时序与代码对应关系|TCP通信时序与代码对应关系]]
 - [[linux网络编程/概念词条/TCP状态转换图|TCP状态转换图]]
 - [[linux网络编程/概念词条/TCP半关闭|TCP半关闭]]
+- [[linux网络编程/概念词条/UDP|UDP]]
+- [[linux网络编程/概念词条/UDP通信流程|UDP通信流程]]
+- [[linux网络编程/概念词条/UDP数据报格式|UDP数据报格式]]
 - [[linux网络编程/概念词条/阻塞式IO|阻塞式IO]]
 - [[linux网络编程/概念词条/监听套接字|监听套接字]]
 - [[linux网络编程/概念词条/已连接套接字|已连接套接字]]
@@ -66,6 +73,7 @@ tags:
 - 服务器端 `accept` 返回的 `cfd` 才用于和客户端通信，原来的 `lfd` 继续负责监听新连接。
 - 在阻塞模式下，如果没有客户端连接，`accept` 会等待；如果没有数据到达，[[linux网络编程/函数笔记/Socket/recv|recv]] / [[linux网络编程/函数笔记/Socket/read|read]] 会等待。
 - TCP 是字节流协议，不能假设一次 `send/write` 一定对应对端一次 [[linux网络编程/函数笔记/Socket/recv|recv]] / [[linux网络编程/函数笔记/Socket/read|read]]。
+- UDP 是数据报协议，服务器不需要 [[linux网络编程/函数笔记/Socket/listen|listen]] / [[linux网络编程/函数笔记/Socket/accept|accept]]，常用 [[linux网络编程/函数笔记/Socket/recvfrom|recvfrom]] 获取客户端地址，再用 [[linux网络编程/函数笔记/Socket/sendto|sendto]] 回复。
 
 ## 复习路线
 
@@ -73,4 +81,5 @@ tags:
 - 再把调用链和 [[linux网络编程/概念词条/TCP三次握手|TCP三次握手]]、[[linux网络编程/概念词条/TCP四次挥手|TCP四次挥手]] 对应起来。
 - 继续理解 [[linux网络编程/概念词条/TCP数据包格式|TCP数据包格式]] 和 [[linux网络编程/概念词条/TCP滑动窗口|TCP滑动窗口]] 如何支撑可靠传输。
 - 再理解 `lfd`、`cfd`、客户端 socket 分别代表什么。
+- 对比 [[linux网络编程/概念词条/UDP通信流程|UDP通信流程]]，记住 UDP 没有连接建立阶段，重点在目标地址和来源地址。
 - 最后用 `nc` 或自写客户端测试服务器程序，观察连接、收发、关闭三个阶段。

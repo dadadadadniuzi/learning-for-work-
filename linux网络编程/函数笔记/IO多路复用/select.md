@@ -24,18 +24,18 @@ tags:
 
 ## 输入参数
 
-- `nfds`：所有被监听 fd 中最大值加 1。内核只检查 `[0, nfds)` 范围内的 fd。
-- `readfds`：读事件集合，传入时表示要监听哪些 fd 是否可读，返回时只保留已经可读的 fd。不关心可读事件可传 `NULL`。
-- `writefds`：写事件集合，传入时表示要监听哪些 fd 是否可写，返回时只保留已经可写的 fd。不关心可写事件常传 `NULL`。
-- `exceptfds`：异常事件集合，传入时表示要监听哪些 fd 是否有异常，基础 TCP 服务器中常传 `NULL`。
-- `timeout`：超时时间。传 `NULL` 表示一直阻塞；传 `{0,0}` 表示立即返回；传正值表示最多等待指定时间。
+- `nfds`：**所有被监听 fd 中最大值加 1。内核只检查 `[0, nfds)` 范围内的 fd。**
+- `readfds`：读事件集合，类型是 [[linux网络编程/概念词条/fd_set|fd_set]] 指针。传入时表示要监听哪些 fd 是否可读，**返回时只保留已经可读的 fd**。不关心可读事件可传 `NULL`。
+- `writefds`：写事件集合，类型是 [[linux网络编程/概念词条/fd_set|fd_set]] 指针。传入时表示要监听哪些 fd 是否可写，**返回时只保留已经可写的 fd**。不关心可写事件常传 `NULL`。
+- `exceptfds`：异常事件集合，类型是 [[linux网络编程/概念词条/fd_set|fd_set]] 指针。传入时表示要监听哪些 fd 是否有异常，基础 TCP 服务器中常传 `NULL`。
+- `timeout`：超时时间，类型是 [[linux网络编程/概念词条/struct timeval|struct timeval]] 指针。传 `NULL` 表示一直阻塞；传 `{0,0}` 表示立即返回；传>0(正值)表示最多等待指定时间。
 
 ## 输出参数
 
 - `readfds`：返回后被修改，只保留可读 fd。
 - `writefds`：返回后被修改，只保留可写 fd。
 - `exceptfds`：返回后被修改，只保留异常 fd。
-- `timeout`：某些系统上可能被修改，不建议循环复用同一个未重置的超时结构。
+- `timeout`：某些系统上可能被修改，不建议循环复用同一个未重置的 [[linux网络编程/概念词条/struct timeval|struct timeval]] 结构。
 
 ## 返回值
 
@@ -45,9 +45,14 @@ tags:
 
 ## 知识点补充
 
-- `select` 会修改传入的集合，所以通常维护 `allset`，每轮复制给 `rset`。
+- `select` 会修改传入的 [[linux网络编程/概念词条/fd_set|fd_set]] 集合，所以通常维护 `allset`，每轮复制给 `rset`。
 - 监听 fd 可读表示有新连接可 `accept`。
 - 通信 fd 可读表示有数据可 `recv/read`，也可能是对端关闭。
+- [[linux网络编程/概念词条/fd_set|fd_set]] 通常受 [[linux网络编程/概念词条/FD_SETSIZE|FD_SETSIZE]] 限制，连接很多时更适合学习 [[linux网络编程/概念词条/poll模型|poll模型]] 或 [[linux网络编程/概念词条/epoll模型|epoll模型]]。
+- [[linux网络编程/概念词条/struct timeval|struct timeval]] 控制等待时间：`NULL` 是一直等（阻塞），`{0,0}` 是立即返回，正时间是最多等这么久。
+- 有新连接 → `listenfd`在 rset
+    有数据 → 某个 `connfd`在 rset
+    同时发生 → `listenfd + connfd`都在 rset
 
 ## 常见用法
 
@@ -59,7 +64,7 @@ int nready = select(maxfd + 1, &rset, NULL, NULL, NULL);
 ## 易错点
 
 - `nfds` 必须是最大 fd 加 1，不是 fd 个数。
-- 返回后要用 `FD_ISSET` 判断具体哪个 fd 就绪。
+- 返回后要用 [[linux网络编程/函数笔记/IO多路复用/FD_ISSET|FD_ISSET]] 判断具体哪个 fd 就绪。
 - 每轮循环不要直接复用被 `select` 改过的集合。
 
 ## 相关概念
@@ -67,6 +72,15 @@ int nready = select(maxfd + 1, &rset, NULL, NULL, NULL);
 - [[linux网络编程/概念词条/select模型|select模型]]
 - [[linux网络编程/概念词条/fd_set|fd_set]]
 - [[linux网络编程/概念词条/事件就绪|事件就绪]]
+- [[linux网络编程/概念词条/FD_SETSIZE|FD_SETSIZE]]
+- [[linux网络编程/概念词条/struct timeval|struct timeval]]
+
+## 相关操作宏
+
+- [[linux网络编程/函数笔记/IO多路复用/FD_ZERO|FD_ZERO]]
+- [[linux网络编程/函数笔记/IO多路复用/FD_SET|FD_SET]]
+- [[linux网络编程/函数笔记/IO多路复用/FD_CLR|FD_CLR]]
+- [[linux网络编程/函数笔记/IO多路复用/FD_ISSET|FD_ISSET]]
 
 ## 相关课时
 

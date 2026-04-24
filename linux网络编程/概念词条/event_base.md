@@ -11,6 +11,7 @@ tags:
 
 - `event_base` 是 Libevent 的事件底座，也可以理解成事件循环的核心对象。
 - 它内部维护事件集合，并选择合适的底层 IO 多路复用机制，例如 epoll、poll、select。
+- 从 [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]] 角度看，`event_base` 就是事件循环和事件分发的核心。
 
 ## 怎么理解
 
@@ -31,3 +32,4 @@ tags:
 
 - [[linux网络编程/07 Libevent库|07 Libevent库]]
 - [[linux网络编程/课时笔记/07 Libevent库/02 常规event基础|02 常规event基础]]
+- [[linux网络编程/概念词条/Reactor反应堆模式|Reactor（反应堆模式）]]
