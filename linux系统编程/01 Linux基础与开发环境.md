@@ -14,6 +14,8 @@ tags:
 - 理解 shell、vim、gcc、gdb、Makefile 在开发流程中的位置
 - 能把“写代码 -> 编译 -> 调试 -> 构建”串成一条线
 - 认识最常用的标准库基础函数，比如 [[linux系统编程/概念词条/memcpy|memcpy]]、[[linux系统编程/概念词条/memmove|memmove]]、[[linux系统编程/概念词条/memset|memset]]
+- 认识项目代码里常见的基础转换函数，例如 [[linux系统编程/函数笔记/标准库/atoi|atoi]]
+- 认识命令行参数解析里常见的函数，例如 [[linux系统编程/函数笔记/标准库/getopt|getopt]]
 
 ## 复习提纲
 
@@ -51,3 +53,5 @@ tags:
 - `gdb` 的重点不是背命令，而是学会定位程序到底在哪一步出错。
 - `memcpy`、`memmove`、`memset` 是 C 语言里最常用的一组内存操作函数。
 - `memcpy` 和 `memmove` 要区分重叠内存场景，`memset` 常用于初始化。
+- `atoi` 常用于把命令行参数或配置字符串快速转换成整数。
+- `getopt` 常用于解析 `-p 8080`、`-f conf.txt` 这类命令行选项。

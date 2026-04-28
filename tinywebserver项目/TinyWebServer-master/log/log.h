@@ -25,10 +25,24 @@ public:
         Log::get_instance()->async_write_log();
     }
     //可选择的参数有日志文件、日志缓冲区大小、最大行数以及最长日志条队列
+    /*
+    作用：
+        初始化日志系统，并决定采用同步还是异步写日志。
+    输入：
+        file_name：日志文件名前缀。
+        close_log：是否关闭日志。
+        log_buf_size：单条日志缓冲区大小。
+        split_lines：单个日志文件允许的最大行数。
+        max_queue_size：异步队列大小，0 表示同步日志。
+    输出：
+        true 表示初始化成功，false 表示打开日志文件失败。
+    */
     bool init(const char *file_name, int close_log, int log_buf_size = 8192, int split_lines = 5000000, int max_queue_size = 0);
 
+    // 作用：写入一条日志，内部根据配置决定直接写文件还是先进阻塞队列。
     void write_log(int level, const char *format, ...);
 
+    // 作用：强制刷新日志文件缓冲区。
     void flush(void);
 
 private:

@@ -1,4 +1,4 @@
-﻿---
+---
 title: stat结构
 tags:
   - linux

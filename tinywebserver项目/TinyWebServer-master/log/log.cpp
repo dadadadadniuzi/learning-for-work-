@@ -25,6 +25,7 @@ bool Log::init(const char *file_name, int close_log, int log_buf_size, int split
     //如果设置了max_queue_size,则设置为异步
     if (max_queue_size >= 1)
     {
+        // 异步日志的核心是“业务线程先入队，后台线程再慢慢落盘”。
         m_is_async = true;
         m_log_queue = new block_queue<string>(max_queue_size);
         pthread_t tid;
@@ -141,6 +142,7 @@ void Log::write_log(int level, const char *format, ...)
 
     m_mutex.unlock();
 
+    // 异步模式优先把日志塞进阻塞队列；同步模式则由当前线程直接写文件。
     if (m_is_async && !m_log_queue->full())
     {
         m_log_queue->push(log_str);

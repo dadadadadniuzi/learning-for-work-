@@ -44,9 +44,33 @@ tags:
 
 - 设置非阻塞、复制 fd、读取/修改 fd 标志。
 
+## 网络编程里最常见的用法
+
+在网络编程中，`fcntl` 最常见的场景之一就是把 socket 设置成非阻塞：
+
+```c
+int flags = fcntl(fd, F_GETFL, 0);
+fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+```
+
+这里的思路是：
+
+- 先用 `F_GETFL` 取出原有标志。
+- 再用 `F_SETFL` 把 [[linux系统编程/概念词条/open标志位|O_NONBLOCK]] 按位或回去。
+
+这样不会把原来已有的状态标志直接覆盖掉。
+
+相关网络知识：
+
+- [[linux网络编程/概念词条/非阻塞I O|非阻塞I/O]]
+- [[linux网络编程/概念词条/O_NONBLOCK|O_NONBLOCK]]
+- [[linux网络编程/概念词条/EAGAIN与EWOULDBLOCK|EAGAIN与EWOULDBLOCK]]
+
 ## 易错点
 
 - `cmd` 不同，第三个参数的含义完全不同。
+- 设置非阻塞时不要直接写 `fcntl(fd, F_SETFL, O_NONBLOCK)`，否则可能把原来的状态标志覆盖掉。
+- 在网络编程里看到 `read/recv/send/accept` 返回 `-1` 时，要结合 `errno` 判断是不是非阻塞下的正常现象。
 
 ## 相关概念
 

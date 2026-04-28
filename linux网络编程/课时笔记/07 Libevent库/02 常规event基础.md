@@ -14,6 +14,7 @@ tags:
 - [[linux网络编程/概念词条/event|event]]
 - `event_base_new`
 - `event_new`
+- `evsignal_new`
 - `event_add`
 - `event_base_dispatch`
 - `event_free`
@@ -24,6 +25,7 @@ tags:
 - [[linux网络编程/概念词条/event|event]]：普通事件对象，用来描述“监听哪个 fd、监听什么事件、触发后调用哪个回调函数”。
 - `event_base_new`：创建事件底座。
 - `event_new`：创建事件对象并绑定 fd、事件标志、回调函数和回调参数。
+- `evsignal_new`：创建信号事件对象，把 `SIGINT`、`SIGTERM` 这类信号也纳入事件循环统一处理。
 - `event_add`：把事件加入底座，进入未决状态，等待触发。
 - `event_base_dispatch`：启动事件循环。
 - `event_free`：释放事件对象。
@@ -31,13 +33,14 @@ tags:
 ## 知识点补充
 
 - 一个 `event_base` 可以管理多个 `event`。
-- 常见事件标志有 `EV_READ`、`EV_WRITE`、`EV_PERSIST`。
+- 常见事件标志有 `EV_READ`、`EV_WRITE`、`EV_SIGNAL`、`EV_PERSIST`。
 - 不加 `EV_PERSIST` 的事件触发一次后可能需要重新添加。
 
 ## 本节内容速览
 
 - 创建底座：`event_base_new`。
 - 创建事件：`event_new`。
+- 创建信号事件：`evsignal_new`。
 - 添加事件：`event_add`。
 - 启动循环：`event_base_dispatch`。
 - 释放资源：`event_free` 和 `event_base_free`。
@@ -52,6 +55,7 @@ tags:
 
 - [[linux网络编程/函数笔记/Libevent/event_base_new|event_base_new]]
 - [[linux网络编程/函数笔记/Libevent/event_new|event_new]]
+- [[linux网络编程/函数笔记/Libevent/evsignal_new|evsignal_new]]
 - [[linux网络编程/函数笔记/Libevent/event_add|event_add]]
 - [[linux网络编程/函数笔记/Libevent/event_base_dispatch|event_base_dispatch]]
 - [[linux网络编程/函数笔记/Libevent/event_free|event_free]]

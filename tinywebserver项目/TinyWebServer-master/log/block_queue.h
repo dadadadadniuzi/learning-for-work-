@@ -17,6 +17,7 @@ template <class T>
 class block_queue
 {
 public:
+    // 作用：构造循环阻塞队列。
     block_queue(int max_size = 1000)
     {
         if (max_size <= 0)
@@ -31,6 +32,7 @@ public:
         m_back = -1;
     }
 
+    // 作用：清空队列状态，不释放底层数组。
     void clear()
     {
         m_mutex.lock();
@@ -40,6 +42,7 @@ public:
         m_mutex.unlock();
     }
 
+    // 作用：析构队列并释放底层数组。
     ~block_queue()
     {
         m_mutex.lock();
@@ -100,6 +103,7 @@ public:
         return true;
     }
 
+    // 作用：返回当前元素个数。
     int size() 
     {
         int tmp = 0;
@@ -111,6 +115,7 @@ public:
         return tmp;
     }
 
+    // 作用：返回队列容量上限。
     int max_size()
     {
         int tmp = 0;

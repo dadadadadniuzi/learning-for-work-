@@ -50,12 +50,18 @@ public:
 class sort_timer_lst
 {
 public:
+    // 作用：构造升序定时器链表。
     sort_timer_lst();
+    // 作用：析构链表并释放所有定时器节点。
     ~sort_timer_lst();
 
+    // 作用：把新定时器按过期时间插入到升序链表中。
     void add_timer(util_timer *timer);
+    // 作用：连接活跃时调整定时器位置，延后过期时间。
     void adjust_timer(util_timer *timer);
+    // 作用：删除指定定时器节点。
     void del_timer(util_timer *timer);
+    // 作用：处理所有已经超时的定时器。
     void tick();
 
 private:
@@ -71,6 +77,7 @@ public:
     Utils() {}
     ~Utils() {}
 
+    // 作用：初始化时间槽大小，决定 alarm 的触发间隔。
     void init(int timeslot);
 
     //对文件描述符设置非阻塞
@@ -88,6 +95,7 @@ public:
     //定时处理任务，重新定时以不断触发SIGALRM信号
     void timer_handler();
 
+    // 作用：向客户端写入简单错误提示并关闭连接。
     void show_error(int connfd, const char *info);
 
 public:
@@ -97,6 +105,7 @@ public:
     int m_TIMESLOT;
 };
 
+// 作用：定时器超时回调，关闭连接并减少在线连接计数。
 void cb_func(client_data *user_data);
 
 #endif

@@ -17,19 +17,31 @@ const char *error_500_form = "There was an unusual problem serving the request f
 locker m_lock;
 map<string, string> users;
 
+/*
+作用：
+    服务器启动时预加载数据库中的用户名和密码，减少每次登录都查库的开销。
+输入：
+    connPool：数据库连接池。
+输出：
+    无。
+*/
 void http_conn::initmysql_result(connection_pool *connPool)
 {
+    // 启动时先把数据库里的用户加载进内存 map，后续登录校验优先走内存。
     //先从连接池中取一个连接
+    // MYSQL* 是 MySQL C API 中的连接句柄类型。
     MYSQL *mysql = NULL;
     connectionRAII mysqlcon(&mysql, connPool);
 
     //在user表中检索username，passwd数据，浏览器端输入
+    // mysql_query 发送 SQL 语句到数据库执行。
     if (mysql_query(mysql, "SELECT username,passwd FROM user"))
     {
         LOG_ERROR("SELECT error:%s\n", mysql_error(mysql));
     }
 
     //从表中检索完整的结果集
+    // mysql_store_result 把查询结果集完整拉回客户端内存。
     MYSQL_RES *result = mysql_store_result(mysql);
 
     //返回结果集中的列数
@@ -39,6 +51,7 @@ void http_conn::initmysql_result(connection_pool *connPool)
     MYSQL_FIELD *fields = mysql_fetch_fields(result);
 
     //从结果集中获取下一行，将对应的用户名和密码，存入map中
+    // mysql_fetch_row 每次取一行数据，直到结果集结束返回 NULL。
     while (MYSQL_ROW row = mysql_fetch_row(result))
     {
         string temp1(row[0]);
@@ -50,8 +63,11 @@ void http_conn::initmysql_result(connection_pool *connPool)
 //对文件描述符设置非阻塞
 int setnonblocking(int fd)
 {
+    // fcntl(F_GETFL) 读取当前 fd 的状态标志。
     int old_option = fcntl(fd, F_GETFL);
+    // O_NONBLOCK 表示把 fd 设置成非阻塞。
     int new_option = old_option | O_NONBLOCK;
+    // fcntl(F_SETFL) 把新的标志重新写回。
     fcntl(fd, F_SETFL, new_option);
     return old_option;
 }
@@ -60,6 +76,7 @@ int setnonblocking(int fd)
 void addfd(int epollfd, int fd, bool one_shot, int TRIGMode)
 {
     epoll_event event;
+    // data.fd 记录这个事件对应的是哪个文件描述符。
     event.data.fd = fd;
 
     if (1 == TRIGMode)
@@ -69,6 +86,7 @@ void addfd(int epollfd, int fd, bool one_shot, int TRIGMode)
 
     if (one_shot)
         event.events |= EPOLLONESHOT;
+    // epoll_ctl(..., EPOLL_CTL_ADD, ...) 表示把 fd 注册进 epoll。
     epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &event);
     setnonblocking(fd);
 }
@@ -91,6 +109,7 @@ void modfd(int epollfd, int fd, int ev, int TRIGMode)
     else
         event.events = ev | EPOLLONESHOT | EPOLLRDHUP;
 
+    // EPOLL_CTL_MOD 表示修改 fd 已经关注的事件集合。
     epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &event);
 }
 
@@ -98,6 +117,14 @@ int http_conn::m_user_count = 0;
 int http_conn::m_epollfd = -1;
 
 //关闭连接，关闭一个连接，客户总量减一
+/*
+作用：
+    关闭当前 HTTP 连接，并把它从 epoll 监控集合中移除。
+输入：
+    real_close：是否真正关闭底层 socket。
+输出：
+    无。
+*/
 void http_conn::close_conn(bool real_close)
 {
     if (real_close && (m_sockfd != -1))
@@ -110,12 +137,26 @@ void http_conn::close_conn(bool real_close)
 }
 
 //初始化连接,外部调用初始化套接字地址
+/*
+作用：
+    用新接入的 socket 初始化一个 http_conn 对象。
+输入：
+    sockfd：客户端连接 fd。
+    addr：客户端地址。
+    root：网站根目录。
+    TRIGMode：连接 fd 的 LT/ET 模式。
+    close_log：日志开关。
+    user / passwd / sqlname：数据库认证信息。
+输出：
+    无。
+*/
 void http_conn::init(int sockfd, const sockaddr_in &addr, char *root, int TRIGMode,
                      int close_log, string user, string passwd, string sqlname)
 {
     m_sockfd = sockfd;
     m_address = addr;
 
+    // one_shot=true 可以避免同一个连接被多个线程并发处理。
     addfd(m_epollfd, sockfd, true, m_TRIGMode);
     m_user_count++;
 
@@ -124,6 +165,7 @@ void http_conn::init(int sockfd, const sockaddr_in &addr, char *root, int TRIGMo
     m_TRIGMode = TRIGMode;
     m_close_log = close_log;
 
+    // c_str() 把 C++ string 转成 const char*，strcpy 再拷贝到类成员字符数组里。
     strcpy(sql_user, user.c_str());
     strcpy(sql_passwd, passwd.c_str());
     strcpy(sql_name, sqlname.c_str());
@@ -133,6 +175,16 @@ void http_conn::init(int sockfd, const sockaddr_in &addr, char *root, int TRIGMo
 
 //初始化新接受的连接
 //check_state默认为分析请求行状态
+/*
+作用：
+    重置连接对象内部状态。
+输入：
+    无。
+输出：
+    无。
+说明：
+    keep-alive 场景下一次响应结束后，还会再次调用它，为下一轮请求清空状态。
+*/
 void http_conn::init()
 {
     mysql = NULL;
@@ -163,6 +215,7 @@ void http_conn::init()
 //返回值为行的读取状态，有LINE_OK,LINE_BAD,LINE_OPEN
 http_conn::LINE_STATUS http_conn::parse_line()
 {
+    // 从状态机只解决一个问题：当前缓冲区里是否已经拿到一整行 HTTP 文本。
     char temp;
     for (; m_checked_idx < m_read_idx; ++m_checked_idx)
     {
@@ -204,8 +257,10 @@ bool http_conn::read_once()
     int bytes_read = 0;
 
     //LT读取数据
+    // LT 模式下不要求一次事件通知就把 socket 中的数据全部读空。
     if (0 == m_TRIGMode)
     {
+        // recv 把新数据追加到读缓冲区尾部，避免覆盖之前没解析完的数据。
         bytes_read = recv(m_sockfd, m_read_buf + m_read_idx, READ_BUFFER_SIZE - m_read_idx, 0);
         m_read_idx += bytes_read;
 
@@ -217,6 +272,7 @@ bool http_conn::read_once()
         return true;
     }
     //ET读数据
+    // ET 模式下必须一直读到 EAGAIN，否则剩余数据可能不会再次触发读事件。
     else
     {
         while (true)
@@ -225,6 +281,7 @@ bool http_conn::read_once()
             if (bytes_read == -1)
             {
                 if (errno == EAGAIN || errno == EWOULDBLOCK)
+                    // 非阻塞模式下读到这里表示“暂时没有更多数据”，不是错误。
                     break;
                 return false;
             }
@@ -241,11 +298,14 @@ bool http_conn::read_once()
 //解析http请求行，获得请求方法，目标url及http版本号
 http_conn::HTTP_CODE http_conn::parse_request_line(char *text)
 {
+    // 主状态机从这里开始，先拆出 method、URL 和 HTTP version。
+    // strpbrk 用来在请求行里找到 method 和 URL 之间的第一个空格/制表符。
     m_url = strpbrk(text, " \t");
     if (!m_url)
     {
         return BAD_REQUEST;
     }
+    // 把分隔空格改成 '\0'，等于在原字符串上原地切段。
     *m_url++ = '\0';
     char *method = text;
     if (strcasecmp(method, "GET") == 0)
@@ -257,10 +317,12 @@ http_conn::HTTP_CODE http_conn::parse_request_line(char *text)
     }
     else
         return BAD_REQUEST;
+    // strspn 跳过开头连续的空格和制表符。
     m_url += strspn(m_url, " \t");
     m_version = strpbrk(m_url, " \t");
     if (!m_version)
         return BAD_REQUEST;
+    // 再切一次，把 URL 和 HTTP 版本分开。
     *m_version++ = '\0';
     m_version += strspn(m_version, " \t");
     if (strcasecmp(m_version, "HTTP/1.1") != 0)
@@ -311,6 +373,7 @@ http_conn::HTTP_CODE http_conn::parse_headers(char *text)
     {
         text += 15;
         text += strspn(text, " \t");
+        // atol 把字符串形式的内容长度转成 long。
         m_content_length = atol(text);
     }
     else if (strncasecmp(text, "Host:", 5) == 0)
@@ -327,6 +390,15 @@ http_conn::HTTP_CODE http_conn::parse_headers(char *text)
 }
 
 //判断http请求是否被完整读入
+/*
+作用：
+    判断请求体是否已经完整到达。
+输入：
+    text：请求体起始位置。
+输出：
+    GET_REQUEST：请求体已经收完整。
+    NO_REQUEST：请求体还没收全，需要继续读 socket。
+*/
 http_conn::HTTP_CODE http_conn::parse_content(char *text)
 {
     if (m_read_idx >= (m_content_length + m_checked_idx))
@@ -341,6 +413,7 @@ http_conn::HTTP_CODE http_conn::parse_content(char *text)
 
 http_conn::HTTP_CODE http_conn::process_read()
 {
+    // process_read 是 HTTP 解析总调度：把“按行切分”和“请求行/请求头/请求体解析”串在一起。
     LINE_STATUS line_status = LINE_OK;
     HTTP_CODE ret = NO_REQUEST;
     char *text = 0;
@@ -385,11 +458,24 @@ http_conn::HTTP_CODE http_conn::process_read()
     return NO_REQUEST;
 }
 
+/*
+作用：
+    根据 URL 和业务规则执行真正的请求处理。
+输入：
+    无，直接使用前面解析出来的 m_url、m_method、m_string 等成员变量。
+输出：
+    FILE_REQUEST / NO_RESOURCE / FORBIDDEN_REQUEST / BAD_REQUEST 等结果码。
+说明：
+    这里既处理静态资源访问，也处理登录/注册这类简单 CGI 逻辑。
+*/
 http_conn::HTTP_CODE http_conn::do_request()
 {
+    // 真正的业务入口在这里：要么把 URL 映射成静态文件，要么进入登录注册逻辑。
+    // 先把网站根目录放进目标路径缓冲区，后面再拼接具体 URL 文件名。
     strcpy(m_real_file, doc_root);
     int len = strlen(doc_root);
     //printf("m_url:%s\n", m_url);
+    // strrchr 从右往左找最后一个 '/'，这里用于判断访问的是哪类业务页面。
     const char *p = strrchr(m_url, '/');
 
     //处理cgi
@@ -409,6 +495,7 @@ http_conn::HTTP_CODE http_conn::do_request()
         //user=123&passwd=123
         char name[100], password[100];
         int i;
+        // 手工解析 POST 表单字符串：user=xxx&passwd=yyy
         for (i = 5; m_string[i] != '&'; ++i)
             name[i - 5] = m_string[i];
         name[i - 5] = '\0';
@@ -433,6 +520,7 @@ http_conn::HTTP_CODE http_conn::do_request()
             if (users.find(name) == users.end())
             {
                 m_lock.lock();
+                // 执行注册 SQL，把新用户写入数据库。
                 int res = mysql_query(mysql, sql_insert);
                 users.insert(pair<string, string>(name, password));
                 m_lock.unlock();
@@ -499,6 +587,7 @@ http_conn::HTTP_CODE http_conn::do_request()
     else
         strncpy(m_real_file + len, m_url, FILENAME_LEN - len - 1);
 
+    // stat 既可以判断文件是否存在，也能拿到权限、大小、类型等元数据。
     if (stat(m_real_file, &m_file_stat) < 0)
         return NO_RESOURCE;
 
@@ -508,11 +597,21 @@ http_conn::HTTP_CODE http_conn::do_request()
     if (S_ISDIR(m_file_stat.st_mode))
         return BAD_REQUEST;
 
+    // open 以只读方式打开目标文件。
     int fd = open(m_real_file, O_RDONLY);
+    // mmap 把文件映射到内存，后面就能直接配合 writev 发送。
     m_file_address = (char *)mmap(0, m_file_stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     close(fd);
     return FILE_REQUEST;
 }
+/*
+作用：
+    解除静态文件的内存映射。
+输入：
+    无。
+输出：
+    无。
+*/
 void http_conn::unmap()
 {
     if (m_file_address)
@@ -521,6 +620,15 @@ void http_conn::unmap()
         m_file_address = 0;
     }
 }
+/*
+作用：
+    把已经准备好的 HTTP 响应写回客户端。
+输入：
+    无，直接读取成员变量中的写缓冲区、iovec 和剩余字节数。
+输出：
+    true：本次发送成功，或者因为 EAGAIN 需要等待下次可写事件继续发。
+    false：发送失败，连接应被关闭。
+*/
 bool http_conn::write()
 {
     int temp = 0;
@@ -534,6 +642,8 @@ bool http_conn::write()
 
     while (1)
     {
+        // writev 把“响应头 + 文件内容”一起发出去，减少系统调用开销。
+        // writev 可以一次发送多段缓冲区：常见场景是“响应头 + 文件内容”一起发。
         temp = writev(m_sockfd, m_iv, m_iv_count);
 
         if (temp < 0)
@@ -549,6 +659,7 @@ bool http_conn::write()
 
         bytes_have_send += temp;
         bytes_to_send -= temp;
+        // 如果响应头已经全部发送完，就开始计算文件内容部分还剩多少。
         if (bytes_have_send >= m_iv[0].iov_len)
         {
             m_iv[0].iov_len = 0;
@@ -578,12 +689,22 @@ bool http_conn::write()
         }
     }
 }
+/*
+作用：
+    向响应写缓冲区追加格式化文本。
+输入：
+    format 和可变参数：要拼进响应报文的内容。
+输出：
+    true：追加成功。
+    false：写缓冲区空间不足。
+*/
 bool http_conn::add_response(const char *format, ...)
 {
     if (m_write_idx >= WRITE_BUFFER_SIZE)
         return false;
     va_list arg_list;
     va_start(arg_list, format);
+    // vsnprintf 按格式化字符串把内容安全写入缓冲区，并避免越界。
     int len = vsnprintf(m_write_buf + m_write_idx, WRITE_BUFFER_SIZE - 1 - m_write_idx, format, arg_list);
     if (len >= (WRITE_BUFFER_SIZE - 1 - m_write_idx))
     {
@@ -597,10 +718,27 @@ bool http_conn::add_response(const char *format, ...)
 
     return true;
 }
+/*
+作用：
+    追加 HTTP 状态行，例如 “HTTP/1.1 200 OK”。
+输入：
+    status：状态码。
+    title：状态码对应的文本说明。
+输出：
+    true / false：是否成功写入缓冲区。
+*/
 bool http_conn::add_status_line(int status, const char *title)
 {
     return add_response("%s %d %s\r\n", "HTTP/1.1", status, title);
 }
+/*
+作用：
+    统一追加常见响应头。
+输入：
+    content_len：响应体长度。
+输出：
+    true / false：是否写入成功。
+*/
 bool http_conn::add_headers(int content_len)
 {
     return add_content_length(content_len) && add_linger() &&
@@ -626,6 +764,15 @@ bool http_conn::add_content(const char *content)
 {
     return add_response("%s", content);
 }
+/*
+作用：
+    根据业务处理结果拼装完整的 HTTP 响应。
+输入：
+    ret：业务处理阶段返回的 HTTP_CODE。
+输出：
+    true：响应已经成功组织好。
+    false：组织响应失败。
+*/
 bool http_conn::process_write(HTTP_CODE ret)
 {
     switch (ret)
@@ -660,6 +807,7 @@ bool http_conn::process_write(HTTP_CODE ret)
         if (m_file_stat.st_size != 0)
         {
             add_headers(m_file_stat.st_size);
+            // iovec 描述一段待发送内存：iov_base 是地址，iov_len 是长度。
             m_iv[0].iov_base = m_write_buf;
             m_iv[0].iov_len = m_write_idx;
             m_iv[1].iov_base = m_file_address;
@@ -685,14 +833,28 @@ bool http_conn::process_write(HTTP_CODE ret)
     bytes_to_send = m_write_idx;
     return true;
 }
+/*
+作用：
+    单连接处理总入口。
+输入：
+    无。
+输出：
+    无。
+关键逻辑：
+    1. 先解析请求；
+    2. 如果请求还不完整，就重新监听可读事件；
+    3. 如果请求完整，就生成响应并切换到可写事件。
+*/
 void http_conn::process()
 {
+    // 单连接处理主链：解析请求、组织响应，然后切换到可写事件。
     HTTP_CODE read_ret = process_read();
     if (read_ret == NO_REQUEST)
     {
         modfd(m_epollfd, m_sockfd, EPOLLIN, m_TRIGMode);
         return;
     }
+    // 这里只是先把响应组织好，真正写 socket 的动作要等 EPOLLOUT 时再执行。
     bool write_ret = process_write(read_ret);
     if (!write_ret)
     {

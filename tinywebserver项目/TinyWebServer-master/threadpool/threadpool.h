@@ -13,14 +13,32 @@ class threadpool
 {
 public:
     /*thread_number是线程池中线程的数量，max_requests是请求队列中最多允许的、等待处理的请求的数量*/
+    /*
+    作用：
+        创建线程池并启动固定数量的工作线程。
+    输入：
+        actor_model：并发模型，决定线程如何处理读写任务。
+        connPool：数据库连接池指针。
+        thread_number：线程数量。
+        max_request：任务队列最大长度。
+    输出：
+        无。
+    */
     threadpool(int actor_model, connection_pool *connPool, int thread_number = 8, int max_request = 10000);
+    // 作用：销毁线程池对象，释放线程数组。
     ~threadpool();
+    // 作用：向任务队列添加一个 Reactor 风格任务。
+    // 输出：true 表示入队成功，false 表示队列已满。
     bool append(T *request, int state);
+    // 作用：向任务队列添加一个 Proactor 风格任务。
+    // 输出：true 表示入队成功，false 表示队列已满。
     bool append_p(T *request);
 
 private:
     /*工作线程运行的函数，它不断从工作队列中取出任务并执行之*/
+    // 作用：pthread 线程入口，内部转调到 run()。
     static void *worker(void *arg);
+    // 作用：工作线程主循环，不断等待任务并执行。
     void run();
 
 private:
@@ -101,6 +119,7 @@ void threadpool<T>::run()
 {
     while (true)
     {
+        // 工作线程平时阻塞在这里，直到任务队列里来了新任务才会被唤醒。
         m_queuestat.wait();
         m_queuelocker.lock();
         if (m_workqueue.empty())
@@ -115,6 +134,7 @@ void threadpool<T>::run()
             continue;
         if (1 == m_actor_model)
         {
+            // Reactor 模式下，工作线程负责真正的 read/write，然后顺序处理这个请求。
             if (0 == request->m_state)
             {
                 if (request->read_once())
@@ -144,6 +164,7 @@ void threadpool<T>::run()
         }
         else
         {
+            // Proactor 风格下，主线程已经完成读，工作线程重点负责后续业务处理。
             connectionRAII mysqlcon(&request->mysql, m_connPool);
             request->process();
         }

@@ -2,6 +2,7 @@
 
 int main(int argc, char *argv[])
 {
+    // 建议先从 main 开始读，它把整个服务器的启动顺序完整串了起来。
     //需要修改的数据库信息,登录名,密码,库名
     string user = "root";
     string passwd = "root";
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
     config.parse_arg(argc, argv);
 
     WebServer server;
+    // 这一步只是把配置灌进 WebServer，真正的日志、线程池、监听等都在下面启动。
 
     //初始化
     server.init(config.PORT, user, passwd, databasename, config.LOGWrite, 
@@ -33,6 +35,7 @@ int main(int argc, char *argv[])
 
     //监听
     server.eventListen();
+    // 调用这里后，程序就常驻在主事件循环中，持续处理连接和请求。
 
     //运行
     server.eventLoop();

@@ -23,6 +23,7 @@ tags:
 - [[linux网络编程/函数笔记/Libevent/event_base_new|event_base_new]]
 - [[linux网络编程/函数笔记/Libevent/event_base_free|event_base_free]]
 - [[linux网络编程/函数笔记/Libevent/event_new|event_new]]
+- [[linux网络编程/函数笔记/Libevent/evsignal_new|evsignal_new]]
 - [[linux网络编程/函数笔记/Libevent/event_add|event_add]]
 - [[linux网络编程/函数笔记/Libevent/event_free|event_free]]
 - [[linux网络编程/函数笔记/Libevent/event_base_dispatch|event_base_dispatch]]

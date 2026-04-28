@@ -8,9 +8,26 @@ using namespace std;
 class Config
 {
 public:
+    /*
+    作用：
+        构造配置对象，并写入服务器启动时使用的默认参数。
+    输入：
+        无。
+    输出：
+        无。
+    */
     Config();
     ~Config(){};
 
+    /*
+    作用：
+        解析命令行参数，把用户输入的启动参数写回当前配置对象。
+    输入：
+        argc：命令行参数个数。
+        argv：命令行参数数组。
+    输出：
+        无。解析结果直接更新 Config 的成员变量。
+    */
     void parse_arg(int argc, char*argv[]);
 
     //端口号

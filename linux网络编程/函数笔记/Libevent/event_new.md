@@ -24,6 +24,7 @@ tags:
 - `base`：事件所属的 [[linux网络编程/概念词条/event_base|event_base]]，由 [[linux网络编程/函数笔记/Libevent/event_base_new|event_base_new]] 创建。
 - `fd`：要监听的文件描述符，类型是 [[linux网络编程/概念词条/evutil_socket_t|evutil_socket_t]]。可以是 socket、管道、标准输入等可被底层 IO 复用机制监听的描述符。
 - `what`：监听的事件类型，常见取值来自 [[linux网络编程/概念词条/Libevent事件标志|Libevent事件标志]]，例如 `EV_READ`、`EV_WRITE`、`EV_PERSIST`。
+- 如果要监听信号事件，通常更直接使用 [[linux网络编程/函数笔记/Libevent/evsignal_new|evsignal_new]]。
 - `cb`：事件触发时调用的回调函数，类型是 [[linux网络编程/概念词条/event_callback_fn|event_callback_fn]]。
 - `arg`：传给回调函数的自定义参数，可以传结构体指针、`base` 指针或 `NULL`。
 
@@ -60,6 +61,7 @@ event_add(ev, NULL);
 - [[linux网络编程/概念词条/evutil_socket_t|evutil_socket_t]]
 - [[linux网络编程/概念词条/event_callback_fn|event_callback_fn]]
 - [[linux网络编程/概念词条/Libevent事件标志|Libevent事件标志]]
+- [[linux网络编程/函数笔记/Libevent/evsignal_new|evsignal_new]]
 
 ## 相关课时
 

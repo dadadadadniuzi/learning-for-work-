@@ -94,13 +94,13 @@ epoll_wait
 
 对应关系：
 
-| Reactor 概念 | Libevent 中的对应物 |
-|---|---|
-| Reactor / 事件循环核心 | [[linux网络编程/概念词条/event_base|event_base]] |
-| 事件源和事件描述 | [[linux网络编程/概念词条/event|event]]、[[linux网络编程/概念词条/bufferevent|bufferevent]] |
-| 事件注册 | [[linux网络编程/函数笔记/Libevent/event_add|event_add]]、[[linux网络编程/函数笔记/Libevent/bufferevent_enable|bufferevent_enable]] |
-| 事件分发循环 | [[linux网络编程/函数笔记/Libevent/event_base_dispatch|event_base_dispatch]] |
-| 事件处理器 | [[linux网络编程/概念词条/事件回调函数|事件回调函数]]、[[linux网络编程/概念词条/bufferevent回调|bufferevent回调]] |
+| Reactor 概念       | Libevent 中的对应物                         |
+| ---------------- | -------------------------------------- |
+| Reactor / 事件循环核心 | [[event_base]]                         |
+| 事件源和事件描述         | [[event]]  [[bufferevent]]             |
+| 事件注册             | [[event_add]]   [[bufferevent_enable]] |
+| 事件分发循环           | [[event_base_dispatch]]                |
+| 事件处理器            | [[事件回调函数]] [[bufferevent回调]]           |
 
 所以学习 Libevent 时，如果能先理解 Reactor，就会更容易理解为什么它总是围绕“事件、回调、事件循环”组织代码。
 
