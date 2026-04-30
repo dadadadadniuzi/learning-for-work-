@@ -190,17 +190,20 @@ void sort_timer_lst::add_timer(util_timer *timer, util_timer *lst_head)
     {
         if (timer->expire < tmp->expire)
         {
+            // 找到第一个过期时间比自己晚的节点，就插到它前面。
             prev->next = timer;
             timer->next = tmp;
             tmp->prev = timer;
             timer->prev = prev;
             break;
         }
+        // 当前位置还不合适，继续向后找。
         prev = tmp;
         tmp = tmp->next;
     }
     if (!tmp)
     {
+        // 一直走到链表尾部还没插进去，说明它是当前最晚过期的节点。
         prev->next = timer;
         timer->prev = prev;
         timer->next = NULL;
@@ -293,7 +296,9 @@ void Utils::addsig(int sig, void(handler)(int), bool restart)
 */
 void Utils::timer_handler()
 {
+    // 统一处理所有已超时连接。
     m_timer_lst.tick();
+    // 重新预约下一次 SIGALRM。
     alarm(m_TIMESLOT);
 }
 
@@ -318,6 +323,7 @@ class Utils;
 */
 void cb_func(client_data *user_data)
 {
+    // 超时后先把 fd 从 epoll 关注列表移除，再关闭 socket。
     epoll_ctl(Utils::u_epollfd, EPOLL_CTL_DEL, user_data->sockfd, 0);
     assert(user_data);
     close(user_data->sockfd);

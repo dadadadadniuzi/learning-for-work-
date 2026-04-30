@@ -30,6 +30,7 @@ bool Log::init(const char *file_name, int close_log, int log_buf_size, int split
         m_log_queue = new block_queue<string>(max_queue_size);
         pthread_t tid;
         //flush_log_thread为回调函数,这里表示创建线程异步写日志
+        // 后台线程会不断从阻塞队列里取日志字符串，然后真正写入文件。
         pthread_create(&tid, NULL, flush_log_thread, NULL);
     }
     
@@ -49,10 +50,12 @@ bool Log::init(const char *file_name, int close_log, int log_buf_size, int split
 
     if (p == NULL)
     {
+        // 没有目录时，直接在当前目录创建“日期+文件名”的日志文件。
         snprintf(log_full_name, 255, "%d_%02d_%02d_%s", my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday, file_name);
     }
     else
     {
+        // 有目录时，把目录和文件名拆开保存，后续切分日志还会继续复用。
         strcpy(log_name, p + 1);
         strncpy(dir_name, file_name, p - file_name + 1);
         snprintf(log_full_name, 255, "%s%d_%02d_%02d_%s", dir_name, my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday, log_name);
@@ -97,6 +100,7 @@ void Log::write_log(int level, const char *format, ...)
     }
     //写入一个log，对m_count++, m_split_lines最大行数
     m_mutex.lock();
+    // m_count 统计当前这个日志文件已经写了多少行。
     m_count++;
 
     if (m_today != my_tm.tm_mday || m_count % m_split_lines == 0) //everyday log
@@ -111,12 +115,14 @@ void Log::write_log(int level, const char *format, ...)
        
         if (m_today != my_tm.tm_mday)
         {
+            // 跨天就切换到新的日期日志文件。
             snprintf(new_log, 255, "%s%s%s", dir_name, tail, log_name);
             m_today = my_tm.tm_mday;
             m_count = 0;
         }
         else
         {
+            // 同一天里行数达到阈值，就按 .1 .2 这种编号继续分卷。
             snprintf(new_log, 255, "%s%s%s.%lld", dir_name, tail, log_name, m_count / m_split_lines);
         }
         m_fp = fopen(new_log, "a");
@@ -131,10 +137,12 @@ void Log::write_log(int level, const char *format, ...)
     m_mutex.lock();
 
     //写入的具体时间内容格式
+    // 先写日志统一前缀：年月日、时分秒、微秒、日志级别。
     int n = snprintf(m_buf, 48, "%d-%02d-%02d %02d:%02d:%02d.%06ld %s ",
                      my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday,
                      my_tm.tm_hour, my_tm.tm_min, my_tm.tm_sec, now.tv_usec, s);
     
+    // 再把调用者真正想记录的业务内容拼到后面。
     int m = vsnprintf(m_buf + n, m_log_buf_size - n - 1, format, valst);
     m_buf[n + m] = '\n';
     m_buf[n + m + 1] = '\0';
@@ -145,11 +153,13 @@ void Log::write_log(int level, const char *format, ...)
     // 异步模式优先把日志塞进阻塞队列；同步模式则由当前线程直接写文件。
     if (m_is_async && !m_log_queue->full())
     {
+        // 异步模式先入队，尽快把控制权还给业务线程。
         m_log_queue->push(log_str);
     }
     else
     {
         m_mutex.lock();
+        // 同步模式下当前线程直接落盘。
         fputs(log_str.c_str(), m_fp);
         m_mutex.unlock();
     }
@@ -161,6 +171,7 @@ void Log::flush(void)
 {
     m_mutex.lock();
     //强制刷新写入流缓冲区
+    // fflush 强制把用户态缓冲区里的数据立即刷到文件流。
     fflush(m_fp);
     m_mutex.unlock();
 }

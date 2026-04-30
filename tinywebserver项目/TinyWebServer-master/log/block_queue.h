@@ -1,6 +1,7 @@
 /*************************************************************
-*循环数组实现的阻塞队列，m_back = (m_back + 1) % m_max_size;  
-*线程安全，每个操作前都要先加互斥锁，操作完后，再解锁
+* 循环数组实现的阻塞队列：
+* m_back = (m_back + 1) % m_max_size;
+* 线程安全：每个操作前先加锁，操作完成后再解锁。
 **************************************************************/
 
 #ifndef BLOCK_QUEUE_H
@@ -47,25 +48,26 @@ public:
     {
         m_mutex.lock();
         if (m_array != NULL)
-            delete [] m_array;
+            delete[] m_array;
 
         m_mutex.unlock();
     }
-    //判断队列是否满了
-    bool full() 
+
+    // 判断队列是否已满。
+    bool full()
     {
         m_mutex.lock();
         if (m_size >= m_max_size)
         {
-
             m_mutex.unlock();
             return true;
         }
         m_mutex.unlock();
         return false;
     }
-    //判断队列是否为空
-    bool empty() 
+
+    // 判断队列是否为空。
+    bool empty()
     {
         m_mutex.lock();
         if (0 == m_size)
@@ -76,8 +78,9 @@ public:
         m_mutex.unlock();
         return false;
     }
-    //返回队首元素
-    bool front(T &value) 
+
+    // 读取队首元素，但不弹出。
+    bool front(T &value)
     {
         m_mutex.lock();
         if (0 == m_size)
@@ -89,8 +92,9 @@ public:
         m_mutex.unlock();
         return true;
     }
-    //返回队尾元素
-    bool back(T &value) 
+
+    // 读取队尾元素，但不弹出。
+    bool back(T &value)
     {
         m_mutex.lock();
         if (0 == m_size)
@@ -104,7 +108,7 @@ public:
     }
 
     // 作用：返回当前元素个数。
-    int size() 
+    int size()
     {
         int tmp = 0;
 
@@ -126,38 +130,37 @@ public:
         m_mutex.unlock();
         return tmp;
     }
-    //往队列添加元素，需要将所有使用队列的线程先唤醒
-    //当有元素push进队列,相当于生产者生产了一个元素
-    //若当前没有线程等待条件变量,则唤醒无意义
+
+    // 往队列添加元素。
+    // 对日志场景来说，相当于生产者投递一条新日志。
     bool push(const T &item)
     {
-
         m_mutex.lock();
         if (m_size >= m_max_size)
         {
-
             m_cond.broadcast();
             m_mutex.unlock();
             return false;
         }
 
+        // 循环队列尾指针前移。
         m_back = (m_back + 1) % m_max_size;
         m_array[m_back] = item;
-
         m_size++;
 
+        // 通知可能正在等待的消费者线程。
         m_cond.broadcast();
         m_mutex.unlock();
         return true;
     }
-    //pop时,如果当前队列没有元素,将会等待条件变量
+
+    // 阻塞弹出一个元素。
+    // 如果当前队列为空，就等待条件变量。
     bool pop(T &item)
     {
-
         m_mutex.lock();
         while (m_size <= 0)
         {
-            
             if (!m_cond.wait(m_mutex.get()))
             {
                 m_mutex.unlock();
@@ -165,6 +168,7 @@ public:
             }
         }
 
+        // 循环队列头指针前移。
         m_front = (m_front + 1) % m_max_size;
         item = m_array[m_front];
         m_size--;
@@ -172,7 +176,7 @@ public:
         return true;
     }
 
-    //增加了超时处理
+    // 带超时的弹出。
     bool pop(T &item, int ms_timeout)
     {
         struct timespec t = {0, 0};
@@ -204,13 +208,21 @@ public:
     }
 
 private:
+    // 保护队列内部数组和下标的互斥锁。
     locker m_mutex;
+    // 队列为空时，消费者在这个条件变量上等待。
     cond m_cond;
 
+    // 循环数组底层存储空间。
     T *m_array;
+    // 当前队列里实际有多少元素。
     int m_size;
+    // 队列最大容量。
     int m_max_size;
+    // 队首下标。
+    // 注意这里记录的是“上一次弹出的位置”，真正队首在 (m_front + 1) % m_max_size。
     int m_front;
+    // 队尾下标，指向最后一个已插入元素的位置。
     int m_back;
 };
 

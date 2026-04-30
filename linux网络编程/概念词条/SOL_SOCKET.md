@@ -19,7 +19,7 @@ socket 选项分布在不同协议层。例如：
 
 | level | 含义 | 常见选项 |
 |---|---|---|
-| [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]] | 通用 socket 层 | [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]、[[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]] |
+| [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]] | 通用 socket 层 | [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]、[[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]、[[linux网络编程/概念词条/SO_LINGER|SO_LINGER]] |
 | `IPPROTO_TCP` | TCP 协议层 | `TCP_NODELAY` |
 | `IPPROTO_IP` | IPv4 协议层 | `IP_TTL` |
 
@@ -40,7 +40,7 @@ setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
 ## 在端口复用中的作用
 
-[[linux网络编程/概念词条/端口复用|端口复用]]相关的 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]、[[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]] 都属于 socket 层选项，所以 `level` 通常写 [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]]。
+[[linux网络编程/概念词条/端口复用|端口复用]]相关的 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]、[[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]，以及控制关闭行为的 [[linux网络编程/概念词条/SO_LINGER|SO_LINGER]]，都属于 socket 层选项，所以 `level` 通常写 [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]]。
 
 ## 易错点
 
@@ -59,3 +59,4 @@ setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 - [[linux网络编程/概念词条/端口复用|端口复用]]
 - [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]
 - [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]
+- [[linux网络编程/概念词条/SO_LINGER|SO_LINGER]]

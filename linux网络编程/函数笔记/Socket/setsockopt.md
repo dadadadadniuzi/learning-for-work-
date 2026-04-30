@@ -9,7 +9,7 @@ tags:
 # setsockopt
 
 > [!info] 功能
-> 设置 socket 选项。网络编程中最常见的用法是开启 [[linux网络编程/概念词条/端口复用|端口复用]]，例如设置 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]] 或 [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]。
+> 设置 socket 选项。网络编程中最常见的用法是开启 [[linux网络编程/概念词条/端口复用|端口复用]]，例如设置 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]] 或 [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]；也可以设置 [[linux网络编程/概念词条/SO_LINGER|SO_LINGER]] 控制关闭连接时的行为。
 
 ## 函数原型
 
@@ -25,7 +25,7 @@ tags:
 - `sockfd`：要设置选项的 socket 文件描述符，通常由 [[linux网络编程/函数笔记/Socket/socket|socket]] 创建。设置端口复用时，一般在 `socket` 后、[[linux网络编程/函数笔记/Socket/bind|bind]] 前使用。
 - `level`：选项所在协议层。端口复用属于通用 socket 层选项，通常传 [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]]。
 - `optname`：具体选项名称。端口复用常用 [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]；多进程负载分担场景可能使用 [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]。
-- `optval`：指向选项值的指针。布尔类选项通常定义 `int opt = 1;` 表示开启，再传 `&opt`；如果要关闭，可传值为 `0` 的整数地址。
+- `optval`：指向选项值的指针。布尔类选项通常定义 `int opt = 1;` 表示开启，再传 `&opt`；如果要关闭，可传值为 `0` 的整数地址。像 [[linux网络编程/概念词条/SO_LINGER|SO_LINGER]] 这类选项，则需要传 [[linux网络编程/概念词条/struct linger|struct linger]] 的地址。
 - `optlen`：`optval` 指向数据的大小，类型是 [[linux网络编程/概念词条/socklen_t|socklen_t]]。布尔类 `int` 选项常传 `sizeof(opt)`。
 
 ## 输出参数
@@ -86,6 +86,8 @@ socket -> setsockopt -> bind -> listen
 - [[linux网络编程/概念词条/SOL_SOCKET|SOL_SOCKET]]
 - [[linux网络编程/概念词条/SO_REUSEADDR|SO_REUSEADDR]]
 - [[linux网络编程/概念词条/SO_REUSEPORT|SO_REUSEPORT]]
+- [[linux网络编程/概念词条/SO_LINGER|SO_LINGER]]
+- [[linux网络编程/概念词条/struct linger|struct linger]]
 - [[linux网络编程/概念词条/socklen_t|socklen_t]]
 - [[linux网络编程/概念词条/TIME_WAIT|TIME_WAIT]]
 

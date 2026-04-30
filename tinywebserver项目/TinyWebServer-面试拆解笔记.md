@@ -38,6 +38,7 @@ created: 2026-04-24
 11. [[TinyWebServer-拆解/11-Webbench压力测试与性能瓶颈分析]]
 12. [[TinyWebServer-拆解/12-半同步半反应堆与并发模型详解]]
 13. [[TinyWebServer-拆解/13-按代码读TinyWebServer的顺序]]
+14. [[TinyWebServer-拆解/14-HTTP状态机逐请求模拟]]
 
 ## 推荐阅读顺序
 

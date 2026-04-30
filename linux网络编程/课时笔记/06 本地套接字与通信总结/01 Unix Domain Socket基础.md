@@ -14,6 +14,7 @@ tags:
 - [[linux网络编程/概念词条/AF_UNIX与AF_LOCAL|AF_UNIX / AF_LOCAL]]
 - 本地套接字和网络套接字的区别
 - 本地套接字仍然使用 socket API
+- `socketpair` 这种不需要路径绑定的本地通信方式
 
 ## 本节学什么详解
 
@@ -21,12 +22,14 @@ tags:
 - [[linux网络编程/概念词条/AF_UNIX与AF_LOCAL|AF_UNIX / AF_LOCAL]]：它们表示本地通信地址族，实际使用中通常可认为是同一类地址族。
 - 本地套接字和网络套接字的区别：网络套接字通过 IP 和端口定位远程或本机服务；本地套接字通过文件系统路径或抽象地址定位同机进程通信端点。
 - 本地套接字仍然使用 socket API：它不是另一套完全不同的函数，仍然使用 `socket`、`bind`、`listen`、`accept`、`connect`，只是地址族和地址结构变了。
+- `socketpair` 这种不需要路径绑定的本地通信方式：它会直接创建一对已经连通的本地 socket，常用于父子进程双向通信。
 
 ## 知识点补充
 
 - 本地套接字不经过网卡，也不需要 IP 地址和端口。
 - 相比 TCP 本机回环通信，本地套接字更适合本机进程间通信，开销通常更小。
 - 本地套接字可以使用流式语义，也可以使用数据报语义，常见练习多使用 `SOCK_STREAM`。
+- 如果只想在本机上快速拿到一对双向通信端点，可以使用 [[linux网络编程/函数笔记/Socket/socketpair|socketpair]]。
 
 ## 本节内容速览
 
@@ -43,6 +46,7 @@ tags:
 ## 本节关键函数
 
 - [[linux网络编程/函数笔记/Socket/socket|socket]]
+- [[linux网络编程/函数笔记/Socket/socketpair|socketpair]]
 - [[linux网络编程/函数笔记/Socket/bind|bind]]
 - [[linux网络编程/函数笔记/Socket/connect|connect]]
 

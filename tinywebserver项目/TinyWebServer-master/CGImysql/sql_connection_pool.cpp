@@ -118,6 +118,7 @@ MYSQL *connection_pool::GetConnection()
 	
 	lock.lock();
 
+	// 从空闲连接链表头部取一个连接出来。
 	con = connList.front();
 	connList.pop_front();
 
@@ -146,6 +147,7 @@ bool connection_pool::ReleaseConnection(MYSQL *con)
 	lock.lock();
 
 	// 把用完的连接重新挂回空闲链表。
+	// 归还时不关闭连接，而是重新放回空闲链表，等待下次复用。
 	connList.push_back(con);
 	++m_FreeConn;
 	--m_CurConn;
@@ -177,6 +179,7 @@ void connection_pool::DestroyPool()
 		for (it = connList.begin(); it != connList.end(); ++it)
 		{
 			MYSQL *con = *it;
+			// 服务整体退出时，才真正关闭底层 MySQL 连接。
 			mysql_close(con);
 		}
 		m_CurConn = 0;

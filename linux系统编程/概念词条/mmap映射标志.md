@@ -1,4 +1,4 @@
-﻿---
+---
 title: mmap映射标志
 tags:
   - linux

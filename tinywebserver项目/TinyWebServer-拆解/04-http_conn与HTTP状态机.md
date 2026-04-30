@@ -32,7 +32,7 @@ tags:
 - keep-alive 状态
 - 目标文件信息
 - `mmap` 文件地址
-- `writev` 用到的 `iovec`
+- `writev` 用到的 [[linux网络编程/概念词条/iovec|iovec]]
 
 ## 为什么必须用状态机
 
@@ -178,14 +178,14 @@ stateDiagram-v2
 ### `write()`
 
 - 作用：发送响应
-- 使用 `writev()`
-- `iovec[0]` 存响应头
-- `iovec[1]` 存文件内容
+- 使用 [[linux网络编程/函数笔记/Socket/writev|writev]]()
+- `[[linux网络编程/概念词条/iovec|iovec]][0]` 存响应头
+- `[[linux网络编程/概念词条/iovec|iovec]][1]` 存文件内容
 
 ## 为什么用 `mmap + writev`
 
 - `mmap`：减少文件读取拷贝
-- `writev`：头和文件内容一次发送，减少系统调用
+- [[linux网络编程/函数笔记/Socket/writev|writev]]：头和文件内容一次发送，减少系统调用
 
 ## keep-alive 怎么处理
 
@@ -202,4 +202,3 @@ stateDiagram-v2
 ## 深入阅读
 
 - [[TinyWebServer-拆解/10-HTTP请求报文解析与GETPOST流程]]
-

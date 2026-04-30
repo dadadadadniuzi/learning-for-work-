@@ -16,6 +16,7 @@ tags:
 - 认识最常用的标准库基础函数，比如 [[linux系统编程/概念词条/memcpy|memcpy]]、[[linux系统编程/概念词条/memmove|memmove]]、[[linux系统编程/概念词条/memset|memset]]
 - 认识项目代码里常见的基础转换函数，例如 [[linux系统编程/函数笔记/标准库/atoi|atoi]]
 - 认识命令行参数解析里常见的函数，例如 [[linux系统编程/函数笔记/标准库/getopt|getopt]]
+- 认识常见字符串处理函数，例如 [[linux系统编程/函数笔记/标准库/strcpy|strcpy]]、[[linux系统编程/函数笔记/标准库/strcat|strcat]]、[[linux系统编程/函数笔记/标准库/strpbrk|strpbrk]]、[[linux系统编程/函数笔记/标准库/strspn|strspn]]、[[linux系统编程/函数笔记/标准库/strcasecmp|strcasecmp]]、[[linux系统编程/函数笔记/标准库/strncasecmp|strncasecmp]]、[[linux系统编程/函数笔记/标准库/strchr|strchr]]、[[linux系统编程/函数笔记/标准库/strrchr|strrchr]]
 
 ## 复习提纲
 
@@ -55,3 +56,8 @@ tags:
 - `memcpy` 和 `memmove` 要区分重叠内存场景，`memset` 常用于初始化。
 - `atoi` 常用于把命令行参数或配置字符串快速转换成整数。
 - `getopt` 常用于解析 `-p 8080`、`-f conf.txt` 这类命令行选项。
+- `strcpy` 和 `strcat` 是最常见的字符串复制与拼接函数，但使用时要格外注意缓冲区大小。
+- `strpbrk` 常用于在字符串里快速定位“第一个属于某组分隔符或特殊字符的字符”。
+- `strspn` 常用于统计字符串开头连续空白、数字或其他指定字符集合的长度。
+- `strcasecmp` 和 `strncasecmp` 常用于做大小写不敏感比较，`strchr` 常用于查找某个分隔字符第一次出现的位置。
+- `strrchr` 常用于找最后一个分隔符，例如从路径里找最后一个 `/` 或从文件名里找最后一个 `.`。

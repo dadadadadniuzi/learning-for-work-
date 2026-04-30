@@ -1,4 +1,4 @@
-﻿---
+---
 title: mmap保护权限
 tags:
   - linux

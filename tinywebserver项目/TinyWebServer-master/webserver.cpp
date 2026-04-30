@@ -451,11 +451,13 @@ void WebServer::dealwithread(int sockfd)
         //proactor
         // Proactor 风格路径：主线程先完成读，工作线程主要处理后续业务逻辑。
         // Proactor 风格：主线程先完成读，再把处理逻辑交给工作线程。
+        // Proactor 路径下，主线程先把 socket 数据读到连接对象自己的缓冲区里。
         if (users[sockfd].read_once())
         {
             LOG_INFO("deal with the client(%s)", inet_ntoa(users[sockfd].get_address()->sin_addr));
 
             //若监测到读事件，将该事件放入请求队列
+            // 然后把“后续解析和业务处理”投递给工作线程。
             m_pool->append_p(users + sockfd);
 
             if (timer)
@@ -465,6 +467,7 @@ void WebServer::dealwithread(int sockfd)
         }
         else
         {
+            // 主线程读失败，通常说明连接异常或对端关闭，直接清理。
             deal_timer(timer, sockfd);
         }
     }
@@ -483,10 +486,12 @@ void WebServer::dealwithwrite(int sockfd)
 
         // Reactor 路径下的写事件：真正的 write 由工作线程执行。
         // append(..., 1) 表示把“写任务”投递给线程池。
+        // 这里只是把“写任务”交给线程池，真正 send/writev 在工作线程里执行。
         m_pool->append(users + sockfd, 1);
 
         while (true)
         {
+            // 主线程忙等这个标志，直到工作线程把这一轮写任务处理完。
             if (1 == users[sockfd].improv)
             {
                 if (1 == users[sockfd].timer_flag)
@@ -504,6 +509,7 @@ void WebServer::dealwithwrite(int sockfd)
         //proactor
         // Proactor 风格路径下：主线程直接执行 write。
         // Proactor 风格下，可写事件直接由主线程执行 write。
+        // Proactor 路径下，主线程自己完成写回客户端。
         if (users[sockfd].write())
         {
             LOG_INFO("send data to the client(%s)", inet_ntoa(users[sockfd].get_address()->sin_addr));
@@ -530,6 +536,7 @@ void WebServer::eventLoop()
     {
         // epoll_wait 阻塞等待内核返回“已经就绪”的事件列表。
         // -1 表示无限等待，直到有事件发生。
+        // epoll_wait 返回“这一次已经就绪的所有事件”数量。
         int number = epoll_wait(m_epollfd, events, MAX_EVENT_NUMBER, -1);
         if (number < 0 && errno != EINTR)
         {
@@ -544,6 +551,7 @@ void WebServer::eventLoop()
             //处理新到的客户连接
             if (sockfd == m_listenfd)
             {
+                // 监听 fd 可读，说明有新的客户端正在完成三次握手，应该 accept。
                 bool flag = dealclientdata();
                 if (false == flag)
                     continue;
@@ -552,6 +560,7 @@ void WebServer::eventLoop()
             {
                 //服务器端关闭连接，移除对应的定时器
                 util_timer *timer = users_timer[sockfd].timer;
+                // 连接异常或被对端关闭，直接走清理逻辑。
                 deal_timer(timer, sockfd);
             }
             //处理信号
@@ -564,15 +573,18 @@ void WebServer::eventLoop()
             //处理客户连接上接收到的数据
             else if (events[i].events & EPOLLIN)
             {
+                // 某个已连接客户端有数据可读，进入读事件处理。
                 dealwithread(sockfd);
             }
             else if (events[i].events & EPOLLOUT)
             {
+                // 某个连接现在可写，说明可以继续回发响应。
                 dealwithwrite(sockfd);
             }
         }
         if (timeout)
         {
+            // timeout 由 SIGALRM 转换而来，表示该做一轮超时连接扫描了。
             utils.timer_handler();
 
             LOG_INFO("%s", "timer tick");

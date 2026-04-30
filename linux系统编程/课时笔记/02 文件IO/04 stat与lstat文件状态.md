@@ -1,4 +1,4 @@
-﻿---
+---
 title: stat与lstat文件状态
 tags:
   - linux

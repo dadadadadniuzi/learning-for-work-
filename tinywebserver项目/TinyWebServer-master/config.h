@@ -17,7 +17,7 @@ public:
         无。
     */
     Config();
-    ~Config(){};
+    ~Config() {};
 
     /*
     作用：
@@ -28,36 +28,42 @@ public:
     输出：
         无。解析结果直接更新 Config 的成员变量。
     */
-    void parse_arg(int argc, char*argv[]);
+    void parse_arg(int argc, char *argv[]);
 
-    //端口号
+    // 服务器监听端口号。
     int PORT;
 
-    //日志写入方式
+    // 日志写入方式：
+    // 0 同步日志
+    // 1 异步日志
     int LOGWrite;
 
-    //触发组合模式
+    // 总的 LT/ET 触发模式组合配置。
     int TRIGMode;
 
-    //listenfd触发模式
+    // 监听 fd 的触发模式。
     int LISTENTrigmode;
 
-    //connfd触发模式
+    // 已连接 fd 的触发模式。
     int CONNTrigmode;
 
-    //优雅关闭链接
+    // 是否启用优雅关闭连接。
     int OPT_LINGER;
 
-    //数据库连接池数量
+    // 数据库连接池中的连接数量。
     int sql_num;
 
-    //线程池内的线程数量
+    // 线程池中的工作线程数量。
     int thread_num;
 
-    //是否关闭日志
+    // 是否关闭日志系统：
+    // 0 表示开启日志
+    // 1 表示关闭日志
     int close_log;
 
-    //并发模型选择
+    // 并发模型选择：
+    // 0 更接近 Proactor
+    // 1 Reactor
     int actor_model;
 };
 

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Linux目录、路径与常用命令
 tags:
   - linux

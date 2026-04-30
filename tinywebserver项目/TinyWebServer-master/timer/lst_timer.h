@@ -28,8 +28,11 @@ class util_timer;
 
 struct client_data
 {
+    // 客户端地址信息。
     sockaddr_in address;
+    // 对应连接的 socket fd。
     int sockfd;
+    // 指向该连接绑定的定时器节点。
     util_timer *timer;
 };
 
@@ -39,11 +42,16 @@ public:
     util_timer() : prev(NULL), next(NULL) {}
 
 public:
+    // 这个定时器的过期时间点，单位是时间戳秒值。
     time_t expire;
-    
-    void (* cb_func)(client_data *);
+
+    // 超时后要执行的回调函数。
+    void (*cb_func)(client_data *);
+    // 回调函数需要用到的连接数据。
     client_data *user_data;
+    // 双向链表前驱指针。
     util_timer *prev;
+    // 双向链表后继指针。
     util_timer *next;
 };
 
@@ -65,9 +73,12 @@ public:
     void tick();
 
 private:
+    // 从某个位置开始查找，把 timer 插入到正确的升序位置。
     void add_timer(util_timer *timer, util_timer *lst_head);
 
+    // 升序链表头指针，最早过期的节点总在前面。
     util_timer *head;
+    // 升序链表尾指针，最晚过期的节点总在后面。
     util_timer *tail;
 };
 
@@ -80,28 +91,32 @@ public:
     // 作用：初始化时间槽大小，决定 alarm 的触发间隔。
     void init(int timeslot);
 
-    //对文件描述符设置非阻塞
+    // 作用：把 fd 设为非阻塞模式。
     int setnonblocking(int fd);
 
-    //将内核事件表注册读事件，ET模式，选择开启EPOLLONESHOT
+    // 作用：把 fd 注册到 epoll 中，并按需设置 ET / ONESHOT。
     void addfd(int epollfd, int fd, bool one_shot, int TRIGMode);
 
-    //信号处理函数
+    // 作用：信号处理函数，把信号编号写进管道。
     static void sig_handler(int sig);
 
-    //设置信号函数
+    // 作用：安装信号处理函数。
     void addsig(int sig, void(handler)(int), bool restart = true);
 
-    //定时处理任务，重新定时以不断触发SIGALRM信号
+    // 作用：处理一次定时任务，并重新设置 alarm。
     void timer_handler();
 
     // 作用：向客户端写入简单错误提示并关闭连接。
     void show_error(int connfd, const char *info);
 
 public:
+    // 全局共享的信号管道数组地址。
     static int *u_pipefd;
+    // 升序定时器链表对象。
     sort_timer_lst m_timer_lst;
+    // 全局共享的 epoll fd。
     static int u_epollfd;
+    // 时间槽大小，单位秒。
     int m_TIMESLOT;
 };
 
