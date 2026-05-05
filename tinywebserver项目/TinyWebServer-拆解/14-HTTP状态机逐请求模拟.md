@@ -883,3 +883,384 @@ return do_request();
 2. `m_checked_idx` 只表示“状态机已经扫描到哪里了”。
 3. `m_start_line` 只表示“当前这一行从哪里开始”。
 4. GET 通常在空行处结束，POST 通常在 `Content-Length` 满足时结束。
+
+---
+
+## 如果 HTTP 请求不完整，它是怎么等待完整协议继续传进来的
+
+这部分非常重要，因为面试官经常会追问：
+
+- 如果一次只收到半个请求头怎么办
+- 如果请求头和请求体不是一次到齐怎么办
+- 如果 TCP 粘包，一次来了多个请求怎么办
+
+这套代码能处理这些情况，核心不是“等一会再说”这么简单，而是：
+
+1. 已经收到的数据先保存在 `m_read_buf`
+2. 用 `m_read_idx` 记住当前一共收到了多少字节
+3. 用 `m_checked_idx` 记住已经检查到哪里了
+4. 如果发现还不完整，就返回 `NO_REQUEST`（请求行和请求头用parse_line()来检测是否完整、请求数据部分用`m_read_idx`是否大于等于m_checked_idx+content_lenght来检测）
+5. 主线程重新监听 `EPOLLIN`
+6. 下次网络数据再到时，从上次断点继续往后读、继续往后检查
+
+也就是说：
+
+这不是“丢弃不完整请求重新来”，而是“把半包先留在缓冲区里，等后续字节补齐后继续解析”。
+
+---
+
+## 先记住一句最关键的话
+
+### `NO_REQUEST` 的真正含义
+
+不是：
+
+> 这个请求没用，丢掉。
+
+而是：
+
+> 这个请求暂时还不完整，先保留已收到的数据，等下一次 `EPOLLIN` 再继续补。
+
+这就是整个“不完整 HTTP 请求处理”的核心思想。
+
+---
+
+## 不完整请求时，谁在“等”
+
+严格来说，不是 `http_conn` 在阻塞等待。
+
+真正的机制是：
+
+1. `process_read()` 发现当前缓冲区还不够组成完整请求
+2. 返回 `NO_REQUEST`
+3. `http_conn::process()` 收到 `NO_REQUEST`
+4. 调用：
+
+```cpp
+modfd(m_epollfd, m_sockfd, EPOLLIN, m_TRIGMode);
+```
+
+5. 这表示：
+
+> 继续把这个连接挂回 epoll，等它下次再有可读数据时重新通知我
+
+所以“等待”不是 while 死等，也不是 sleep。
+
+而是：
+
+把连接重新交还给 `epoll` 事件循环，等内核告诉它“又有新数据来了”。
+
+---
+
+## 情况一：一次只收到半个请求头
+
+### 例子
+
+第一次只收到：
+
+```http
+GET /index.html HTTP/1.1\r\n
+Host:img.mu
+```
+
+注意：
+
+- 第一行请求行是完整的
+- 第二行 `Host` 只有一半
+- 后面没有 `\r\n`
+
+### 第 1 步：`read_once()` 之后
+
+此时：
+
+- `m_read_buf` 里有半包数据
+- `m_read_idx > 0`
+- `m_checked_idx = 0`
+- `m_start_line = 0`
+
+### 第 2 步：`process_read()` 先处理请求行
+
+第一次 `parse_line()` 能成功切出：
+
+```http
+GET /index.html HTTP/1.1
+```
+
+所以：
+
+- 请求行能正常进入 `parse_request_line()`
+- `m_check_state` 被切到 `CHECK_STATE_HEADER`
+
+### 第 3 步：继续处理第二行请求头
+
+第二次 `parse_line()` 开始扫：
+
+```http
+Host:img.mu
+```
+
+但这时它扫到 `m_read_idx` 末尾，也找不到 `\r\n`。
+
+于是：
+
+```cpp
+return LINE_OPEN;
+```
+
+这表示：
+
+> 当前这一行还没收完整
+
+### 第 4 步：`process_read()` 结束本轮解析
+
+因为 `parse_line()` 返回的不是 `LINE_OK`，所以 `while` 退出。
+
+最后：
+
+```cpp
+return NO_REQUEST;
+```
+
+### 第 5 步：上层重新监听 `EPOLLIN`
+
+`http_conn::process()` 收到 `NO_REQUEST` 后：
+
+```cpp
+modfd(m_epollfd, m_sockfd, EPOLLIN, m_TRIGMode);
+return;
+```
+
+这一步之后：
+
+- 连接不会关闭
+- 缓冲区里的半包不会丢
+- 状态机会停在当前进度
+
+### 第 6 步：第二批数据到来
+
+假设下一次又收到：
+
+```http
+kewang.com\r\n
+User-Agent:...\r\n
+\r\n
+```
+
+这次 `read_once()` 不是从头写缓冲区，而是接着：
+
+```cpp
+m_read_buf + m_read_idx
+```
+
+继续往后追加。
+
+所以旧数据：
+
+```http
+Host:img.mu
+```
+
+会和新数据：
+
+```http
+kewang.com\r\n
+```
+
+拼成完整的：
+
+```http
+Host:img.mukewang.com\r\n
+```
+
+### 第 7 步：下次 `process_read()` 从断点继续
+
+这时特别关键：
+
+- `m_read_idx` 变大了
+- `m_checked_idx` 还停留在上次没解析完那一行的起点附近
+- `m_start_line` 也还保留着那一行的起始位置
+
+所以状态机不是重头解析，而是从上次没完成的那一行继续扫。
+
+这就是它能处理“半个请求头”的根本原因。
+
+---
+
+## 情况二：请求头完整，但请求体只到了一半
+
+### 例子
+
+第一次收到：
+
+```http
+POST /login HTTP/1.1\r\n
+Host:example.com\r\n
+Content-Length:20\r\n
+\r\n
+user=tom&pa
+```
+
+注意：
+
+- 请求头已经完整
+- 空行也到了
+- body 理论上应该有 20 字节
+- 但现在只到了 `user=tom&pa`，明显不够
+
+### 第 1 步：请求行和请求头正常解析
+
+状态机会顺利走到：
+
+```cpp
+m_check_state = CHECK_STATE_CONTENT
+```
+
+因为空行出现时，`m_content_length != 0`。
+
+### 第 2 步：进入 `parse_content(text)`
+
+这时 `text` 指向 body 起始位置。
+
+它判断：
+
+```cpp
+if (m_read_idx >= (m_content_length + m_checked_idx))
+```
+
+如果 body 还没收全，这个条件就不成立。
+
+于是：
+
+```cpp
+return NO_REQUEST;
+```
+
+### 第 3 步：为什么不会误处理
+
+因为源码只有在 body 字节数完全够时，才会：
+
+```cpp
+text[m_content_length] = '\0';
+m_string = text;
+return GET_REQUEST;
+```
+
+也就是说：
+
+- 没收完整，绝不会把半个 body 当成完整表单去解析
+- 不会提前进入 `do_request()`
+
+这就是通过 `Content-Length` 避免误处理的关键。
+
+### 第 4 步：下一批 body 到来
+
+第二次读到剩余数据后，`m_read_idx` 继续变大。
+
+再次进入 `process_read()` 时：
+
+- 主状态机还停在 `CHECK_STATE_CONTENT`
+- 它不会重走请求行和请求头
+- 而是直接继续检查 body 是否够长
+
+够长后才正式完成请求。
+
+---
+
+## 情况三：一次来了两个请求，为什么不会乱
+
+### 例子
+
+一次 TCP 读到了：
+
+```http
+GET /a HTTP/1.1\r\n
+Host:x\r\n
+\r\n
+GET /b HTTP/1.1\r\n
+Host:x\r\n
+\r\n
+```
+
+这就是典型的粘包。
+
+### 这份代码能做什么
+
+它能正确把第一个请求解析完整。
+
+因为：
+
+- `parse_line()` 能一行一行切
+- `process_read()` 会在第一个请求完整后 `return do_request()`
+
+### 但它不是“单次 process 里连续处理多个请求”
+
+也就是说，这个项目不是在一次 `process_read()` 里把两个 HTTP 请求都处理掉。
+
+它更偏向：
+
+1. 先完成当前这个请求
+2. 组织响应
+3. 如果是 keep-alive，再通过下一轮事件继续处理后面的请求
+
+所以你面试时可以说：
+
+> 这个项目解决了 TCP 流式传输下的半包问题和基本粘包切分问题，但它的请求处理粒度仍然是“一轮先处理一个完整请求”，不是一次函数调用里批量消费多个 HTTP 请求。
+
+这句话是比较稳的。
+
+---
+
+## 为什么半包不会丢：核心原因总结
+
+### 原因 1：新数据不是覆盖写，而是追加写
+
+`read_once()` 读取位置是：
+
+```cpp
+recv(m_sockfd, m_read_buf + m_read_idx, READ_BUFFER_SIZE - m_read_idx, 0);
+```
+
+重点在：
+
+```cpp
+m_read_buf + m_read_idx
+```
+
+也就是：
+
+新数据总是接在旧数据后面。
+
+### 原因 2：解析位置有断点
+
+状态机不会每次从头瞎扫，而是靠：
+
+- `m_checked_idx`
+- `m_start_line`
+
+记住“上次扫到哪里了”。
+
+### 原因 3：不完整就返回 `NO_REQUEST`
+
+这不是失败，而是“暂缓处理”。
+
+### 原因 4：重新注册读事件
+
+上层收到 `NO_REQUEST` 后，会继续监听这个连接的 `EPOLLIN`。
+
+所以后续数据一来，就能继续补全。
+
+---
+
+## 用一句话解释“等待完整协议”的本质
+
+你可以这样说：
+
+> TinyWebServer 不是在用户态阻塞等待 HTTP 请求完整，而是把当前已经收到的半包保存在读缓冲区里，用 `m_read_idx`、`m_checked_idx`、`m_start_line` 记录读入和解析进度；如果状态机发现请求还不完整，就返回 `NO_REQUEST`，并重新监听 `EPOLLIN`，等下一批数据到来后从断点继续解析。
+
+---
+
+## 你面试时最值得背的 3 句回答
+
+1. TCP 是字节流，应用层看不到天然的请求边界，所以必须自己维护缓冲区和解析状态。
+2. 这个项目通过 `m_read_idx` 记录已读字节数，通过 `m_checked_idx` 和 `m_start_line` 记录解析进度，不完整时返回 `NO_REQUEST`，不会丢掉半包。
+3. 下次 `EPOLLIN` 到来时，新数据继续追加到旧数据后面，状态机从上次停下的位置继续检查，直到请求头或请求体真正完整。

@@ -629,7 +629,7 @@ http_conn::HTTP_CODE http_conn::do_request()
             name[i - 5] = m_string[i];
         name[i - 5] = '\0';
 
-        int j = 0;
+        int j = 0; //前端表单实际字段名是：password 而 `&password=` 的长度也刚好是 10
         for (i = i + 10; m_string[i] != '\0'; ++i, ++j)
             password[j] = m_string[i];
         password[j] = '\0';

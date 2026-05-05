@@ -50,8 +50,9 @@ bool Log::init(const char *file_name, int close_log, int log_buf_size, int split
 
     if (p == NULL)
     {
-        // 没有目录时，直接在当前目录创建“日期+文件名”的日志文件。
+        // 没有目录时，直接在当前目录创建“日期+文件名”的日志文件，文件名字在log_full_name中
         snprintf(log_full_name, 255, "%d_%02d_%02d_%s", my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday, file_name);
+
     }
     else
     {
@@ -138,6 +139,7 @@ void Log::write_log(int level, const char *format, ...)
 
     //写入的具体时间内容格式
     // 先写日志统一前缀：年月日、时分秒、微秒、日志级别。
+    //若format = "client %d connected from %s";
     int n = snprintf(m_buf, 48, "%d-%02d-%02d %02d:%02d:%02d.%06ld %s ",
                      my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday,
                      my_tm.tm_hour, my_tm.tm_min, my_tm.tm_sec, now.tv_usec, s);

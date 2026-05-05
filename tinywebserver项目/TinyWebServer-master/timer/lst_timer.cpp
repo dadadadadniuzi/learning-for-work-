@@ -60,6 +60,7 @@ void sort_timer_lst::add_timer(util_timer *timer)
         head = timer;
         return;
     }
+    //普通中间插入
     add_timer(timer, head);
 }
 /*

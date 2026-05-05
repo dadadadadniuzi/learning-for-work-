@@ -218,6 +218,14 @@ connection_pool::~connection_pool()
 }
 
 /*
+RAII 全称是 Resource Acquisition Is Initialization，中文通常可以理解成：
+
+资源获取即初始化。
+
+它的核心意思不是“初始化资源”，而是：
+
+对象一创建，就顺手把资源拿到手
+对象一销毁，就自动把资源释放掉
 作用：
     RAII 封装：构造时自动获取一个连接。
 输入：

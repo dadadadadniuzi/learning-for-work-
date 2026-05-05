@@ -39,6 +39,11 @@ created: 2026-04-24
 12. [[TinyWebServer-拆解/12-半同步半反应堆与并发模型详解]]
 13. [[TinyWebServer-拆解/13-按代码读TinyWebServer的顺序]]
 14. [[TinyWebServer-拆解/14-HTTP状态机逐请求模拟]]
+15. [[TinyWebServer-拆解/15-信号处理与管道转发机制]]
+16. [[TinyWebServer-拆解/16-客户端读请求处理全流程模拟]]
+17. [[TinyWebServer-拆解/17-客户端写响应处理全流程模拟]]
+18. [[TinyWebServer-拆解/18-客户端登录处理全流程模拟]]
+19. [[TinyWebServer-拆解/19-写一条日志的全流程模拟]]
 
 ## 推荐阅读顺序
 

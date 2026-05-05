@@ -1,4 +1,4 @@
-﻿---
+---
 title: setitimer类型
 tags:
   - linux
