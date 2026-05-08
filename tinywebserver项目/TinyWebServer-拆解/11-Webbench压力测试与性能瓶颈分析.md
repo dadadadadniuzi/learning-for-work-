@@ -85,7 +85,7 @@ Webbench 是一个轻量级 Web 压力测试工具。
 项目自带说明里最常见的形式是：
 
 ```bash
-webbench -c 500 -t 30 http://127.0.0.1/index.html
+./webbench -c 500 -t 30 http://127.0.0.1/index.html
 ```
 
 常用参数：
@@ -508,3 +508,319 @@ README 里给了多组结果，对比的是：
 > [!tip]
 > 面试里最加分的不是“你跑过压测”，而是“你知道为什么会跑出这个结果，以及下一步该优化哪里”。
 
+LT+LT
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+8000 clients, running 5 sec.
+
+Speed=331812 pages/min, 619360 bytes/sec.
+Requests: 27651 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+6000 clients, running 5 sec.
+
+Speed=323532 pages/min, 603881 bytes/sec.
+Requests: 26961 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+4000 clients, running 5 sec.
+
+Speed=349356 pages/min, 652176 bytes/sec.
+Requests: 29113 susceed, 0 failed.
+
+ET+ET
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+8000 clients, running 5 sec.
+
+Speed=333612 pages/min, 622742 bytes/sec.
+Requests: 27801 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+6000 clients, running 5 sec.
+
+Speed=339960 pages/min, 634569 bytes/sec.
+Requests: 28330 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+4000 clients, running 5 sec.
+
+Speed=338796 pages/min, 632352 bytes/sec.
+Requests: 28233 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+2000 clients, running 5 sec.
+
+Speed=373440 pages/min, 697110 bytes/sec.
+Requests: 31120 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+1000 clients, running 5 sec.
+
+Speed=379812 pages/min, 708982 bytes/sec.
+Requests: 31651 susceed, 0 failed.
+
+Webbench - Simple Web Benchmark 1.5
+Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.
+
+Benchmarking: GET http://localhost:9007/
+500 clients, running 5 sec.
+
+Speed=388716 pages/min, 725580 bytes/sec.
+Requests: 32393 susceed, 0 failed.
+
+## 16. 本次 ET + ET 压测结果分析
+
+这次 ET + ET 模式下，请求的是：
+
+```text
+GET http://localhost:9007/
+```
+
+压测时间统一是 5 秒，结果整理成表：
+
+| 并发客户端数 | 成功请求数 | 失败请求数 | QPS 约等于 | bytes/sec |
+|---:|---:|---:|---:|---:|
+| 500 | 32393 | 0 | 6479 | 725580 |
+| 1000 | 31651 | 0 | 6330 | 708982 |
+| 2000 | 31120 | 0 | 6224 | 697110 |
+| 4000 | 28233 | 0 | 5647 | 632352 |
+| 6000 | 28330 | 0 | 5666 | 634569 |
+| 8000 | 27801 | 0 | 5560 | 622742 |
+
+### 先说结论
+
+这组数据说明：
+
+> 在当前机器和当前 Webbench 测试方式下，服务器的有效吞吐上限大约已经在 `5600 ~ 6500 QPS` 这一档。  
+> 并发客户端数从 500 增加到 8000，并没有带来更多成功请求，说明瓶颈已经不在“客户端数量够不够”，而在“服务端或本机压测环境单位时间最多能完成多少请求”。
+
+也就是说，`requests` 几乎不再增长不是异常，而是进入了吞吐平台期。
+
+### 为什么 client 数增加，requests 没有明显增加
+
+Webbench 的并发客户端数表示“同时有多少客户端在压服务器”，但服务器最终能完成多少请求，取决于这条链路里最慢的一环：
+
+```text
+Webbench 客户端进程
+    -> TCP 连接建立
+    -> 服务端 accept
+    -> epoll 事件分发
+    -> read_once 读请求
+    -> 线程池 / process 处理
+    -> process_write 组织响应
+    -> writev 回写
+    -> close 或 keep-alive 处理
+```
+
+当 500 个客户端已经足够把服务器打满时，再增加到 1000、2000、4000、8000 个客户端，只会让更多请求排队、等待调度、抢 CPU，不会凭空增加服务端处理能力。
+
+所以这组数据的核心现象是：
+
+```text
+并发数增加
+    -> 压力更大
+    -> 但服务端处理能力已经到顶
+    -> 成功请求数不再增长
+    -> 高并发下还会因为调度和连接管理开销变大而略微下降
+```
+
+### 为什么高并发反而略微下降
+
+从 500 clients 到 8000 clients，QPS 从大约 `6479` 降到 `5560`。  
+这说明高并发没有让服务器更快，反而引入了额外开销。
+
+最可能的原因有几个：
+
+1. **本机压测导致客户端和服务端抢 CPU**
+
+   这次请求的是 `localhost:9007`，说明 Webbench 和 TinyWebServer 很可能跑在同一台机器上。  
+   Webbench 本身会创建大量客户端进程/连接，它也需要 CPU 调度。
+
+   当 clients 很大时，CPU 不只在跑服务器，还要跑大量 Webbench 客户端。  
+   所以测到的不是纯服务端性能，而是：
+
+   ```text
+   服务端处理能力 + Webbench 发压能力 + 操作系统调度能力
+   ```
+
+   这会让高并发下的 QPS 下降。
+
+2. **短连接场景下，连接建立和关闭开销很重**
+
+   Webbench 默认更像是在不断制造 HTTP 请求压力。  
+   如果每个请求都伴随连接建立、accept、epoll 注册、回收连接，那么服务器大量时间会花在：
+
+   - `accept`
+   - `epoll_ctl`
+   - 定时器添加 / 删除
+   - socket 关闭
+   - 连接对象初始化
+
+   对 TinyWebServer 这种项目来说，请求 `/` 返回的内容很小，真正业务处理并不重。  
+   这时瓶颈很可能不在 HTTP 解析本身，而在大量短连接带来的系统调用和事件管理开销。
+
+3. **主线程事件分发可能成为瓶颈**
+
+   TinyWebServer 虽然有线程池，但主线程仍然负责：
+
+   - `epoll_wait`
+   - 新连接 `accept`
+   - 事件判断
+   - 读写事件分发
+   - 定时器和信号事件处理
+
+   当连接数升高时，主线程要处理的事件数量会增加。  
+   如果主线程的事件分发速度到了上限，线程池再多也不一定能继续提高 QPS。
+
+4. **ET 模式降低重复通知，但要求一次读/写尽**
+
+   ET + ET 的优势是减少重复事件通知。  
+   但它也要求代码在可读或可写时尽可能循环读完、写完。
+
+   在高并发短连接压测下，ET 模式不一定总比 LT 更高，因为性能还取决于：
+
+   - 每次事件里处理了多少连接
+   - `read_once()` / `write()` 是否频繁遇到 `EAGAIN`
+   - `epoll_ctl` 修改事件的次数
+   - 主线程是否被大量连接事件拖住
+
+   所以 ET + ET 没有随 clients 增加而继续上涨，是可以理解的。
+
+### 这是不是网络带宽瓶颈
+
+不像。
+
+因为最高 `bytes/sec` 只有大约：
+
+```text
+725580 bytes/sec ≈ 0.69 MB/s
+```
+
+这个吞吐量很小，远远不像网卡带宽瓶颈。  
+而且本次访问的是 `localhost`，走的是本机回环网络，网络带宽通常不是主要限制。
+
+所以这次更像是：
+
+```text
+CPU 调度 + 短连接系统调用 + epoll 事件分发 + 连接管理
+```
+
+这些共同限制了 QPS。
+
+### 这是不是数据库瓶颈
+
+不像。
+
+这次请求的是：
+
+```text
+GET /
+```
+
+如果只是访问首页或静态资源，一般不会进入登录注册的 MySQL 查询逻辑。  
+所以这组数据不适合说明数据库连接池瓶颈。
+
+如果要测数据库瓶颈，应该单独压：
+
+```text
+POST /2CGISQL.cgi
+POST /3CGISQL.cgi
+```
+
+也就是登录和注册流程。
+
+### 这是不是日志瓶颈
+
+要看压测时有没有关闭日志。
+
+如果日志开启，并且每个请求都写日志，那么日志系统可能参与瓶颈。  
+尤其是同步日志或频繁 `flush()` 时，磁盘 I/O 和锁竞争会拖慢请求处理。
+
+但从这组数据本身看，0 failed 且 bytes/sec 很低，更明显的问题还是吞吐平台期。  
+后续可以做一组对比：
+
+```text
+关闭日志压一次
+开启同步日志压一次
+开启异步日志压一次
+```
+
+如果关闭日志后 QPS 明显上升，才说明日志 I/O 是主要瓶颈。
+
+### 这组数据最合理的判断
+
+这组 ET + ET 压测里，最合理的判断是：
+
+> 500 clients 时已经基本打满当前环境的处理能力。  
+> 之后继续增加到 1000、2000、4000、6000、8000 clients，并不会提高服务端处理速度，反而会增加客户端进程调度、连接建立关闭、epoll 事件分发和定时器维护的额外开销。  
+> 所以成功请求数基本稳定在 2.8 万到 3.2 万之间，高并发时略有下降，但 0 failed 说明服务器没有崩溃，稳定性还可以。
+
+一句话概括：
+
+> 这不是“并发没压上去”，而是“500 并发已经把当前服务器和本机压测环境压到吞吐上限了”。
+
+### 面试时可以怎么说
+
+如果面试官问：“为什么 500、1000、8000 并发下请求数差不多？”
+
+可以这样答：
+
+> 我这组 ET + ET 压测里，500 并发时已经达到 6400 左右 QPS，后续把并发加到 8000，请求数没有继续增长，说明瓶颈已经不在客户端并发数，而在当前环境下服务端单位时间处理请求的能力。因为这次是 localhost 压测，Webbench 客户端和服务器会抢同一台机器的 CPU；同时 Webbench 的短连接压力会带来大量 accept、epoll_ctl、连接初始化、定时器维护和关闭 socket 的系统调用开销。所以高并发下 QPS 反而略有下降。由于失败数一直是 0，说明服务器稳定性可以，但吞吐已经进入平台期。下一步我会通过关闭日志、换独立压测机、观察 CPU 占用和系统调用次数来进一步确认瓶颈。
+
+### 后续怎么验证瓶颈
+
+可以继续做几组实验：
+
+1. **服务器和 Webbench 分开机器跑**
+
+   排除本机客户端和服务端抢 CPU 的影响。
+
+2. **固定 500 clients，延长压测时间**
+
+   比如从 5 秒改成 30 秒，观察 QPS 是否稳定。
+
+3. **分别压小文件、大文件、登录接口**
+
+   区分：
+
+   - 小文件：偏连接和事件分发瓶颈
+   - 大文件：偏写回和带宽瓶颈
+   - 登录注册：偏数据库连接池和 SQL 瓶颈
+
+4. **对比日志开关**
+
+   如果关闭日志后 QPS 明显提升，说明日志 I/O 或日志锁竞争影响较大。
+
+5. **观察 CPU 和系统调用**
+
+   可以重点看：
+
+   - CPU 是否打满
+   - 上下文切换是否很多
+   - `accept` / `epoll_ctl` / `read` / `writev` 调用是否很密集
+   - 服务端主线程是否比工作线程更忙
+
+这样才能把“QPS 不再增长”从现象进一步定位到具体瓶颈。
