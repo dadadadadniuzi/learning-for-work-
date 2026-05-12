@@ -167,39 +167,102 @@ YYYYMMDD_HHMMSS_序列名
 
 `result_json` 不是只存一个结论，而是存整份结构化报告，方便前端历史详情页、AI 问答和后续扩展复用。
 
-它主要包含这些数据项：
+它主要包含这些数据项，我建议你面试时直接按“字段名 + 中文含义”来讲：
 
 1. `filename`
-2. `timestamp`
-3. `total_slices`
-4. `voxel_spacing`
-5. `summary`
-6. `nodules`
-7. `support_info`
+   中文：上传的 CT 文件名。
 
-其中 `summary` 里有：
+2. `timestamp`
+   中文：本次诊断结果生成时间。
+
+3. `total_slices`
+   中文：这份 CT 一共有多少张切片。
+
+4. `voxel_spacing`
+   中文：体素间距，也就是 CT 在三个方向上的采样间隔。
+
+5. `summary`
+   中文：诊断摘要信息。
+
+6. `nodules`
+   中文：结节明细列表。
+
+7. `support_info`
+   中文：辅助说明信息，比如候选区域数量、分析说明、某些模块是否启用。
+
+#### `summary` 里具体有什么
 
 1. `overall_finding`
-2. `nodule_count`
-3. `most_concerning_nodule`
+   中文：总体诊断结论。
+   常见值：
+   - `high_risk`：高风险
+   - `moderate_risk`：中风险 / 建议进一步检查
+   - `low_risk`：低风险
+   - `no_nodules_found`：未发现结节
 
-`most_concerning_nodule` 里通常有：
+2. `nodule_count`
+   中文：最终识别出的结节数量。
+
+3. `most_concerning_nodule`
+   中文：最值得关注、风险最高的那个结节的详情。
+
+#### `most_concerning_nodule` 里具体有什么
 
 1. `id`
+   中文：结节编号。
+
 2. `nodule_probability`
+   中文：这个候选区域是结节的概率。
+
 3. `malignancy_probability`
+   中文：这个结节是恶性的概率。
+
 4. `malignancy_level`
+   中文：恶性风险等级。
+   常见值：
+   - `low`：低风险
+   - `medium`：中风险
+   - `high`：高风险
+
 5. `center_xyz`
+   中文：结节中心在病人坐标系下的位置。
+
 6. `center_irc`
+   中文：结节中心在图像数组坐标系下的位置。
+   其中：
+   - `index`：第几张切片
+   - `row`：切片中的第几行
+   - `col`：切片中的第几列
+
 7. `diameter_mm`
+   中文：估计结节直径，单位是毫米。
 
-`nodules` 是所有结节明细列表，每个结节也会带这些字段。
+#### `nodules` 是什么
 
-`support_info` 里通常有：
+`nodules` 是所有结节的列表。
+
+也就是说，`most_concerning_nodule` 只是从 `nodules` 里挑出来最值得重点展示的那个，而 `nodules` 本身保存的是所有结节的完整明细。
+
+每个结节条目通常也会带这些字段：
+
+1. `id`：结节编号
+2. `nodule_probability`：结节概率
+3. `malignancy_probability`：恶性概率
+4. `malignancy_level`：风险等级
+5. `center_xyz`：病人坐标
+6. `center_irc`：图像坐标
+7. `diameter_mm`：结节直径
+
+#### `support_info` 里具体有什么
 
 1. `total_candidates`
+   中文：分割阶段一共提出了多少个候选区域。
+
 2. `note`
+   中文：本次分析的补充说明，比如是否是真实模型推理。
+
 3. `malignancy_analysis_available`
+   中文：恶性分析模块是否可用。
 
 ### 3.4 为什么要同时存“摘要字段”和“完整 JSON”
 

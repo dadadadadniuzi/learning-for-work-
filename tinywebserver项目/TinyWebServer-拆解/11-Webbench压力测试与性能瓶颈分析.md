@@ -591,6 +591,15 @@ Benchmarking: GET http://localhost:9007/
 Speed=388716 pages/min, 725580 bytes/sec.
 Requests: 32393 susceed, 0 failed.
 
+- 端口9007
+- [x]  异步写入日志
+- [x]  使用ET+ET组合
+- [x]  使用优雅关闭连接
+- [x]  数据库连接池内有10条连接
+- [x]  线程池内有10条线程
+- [x]  关闭日志
+- [x]  Reactor反应堆模型
+
 ## 16. 本次 ET + ET 压测结果分析
 
 这次 ET + ET 模式下，请求的是：
