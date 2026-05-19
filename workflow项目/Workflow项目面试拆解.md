@@ -25,6 +25,8 @@ aliases:
 - [[Workflow-07 上层模块：WFTaskFactory、Server、Client]]
 - [[Workflow-08 路由、DNS、协议层]]
 - [[Workflow-09 高频面试题与背诵稿]]
+- [[Workflow-10 10分钟速背版]]
+- [[Workflow-11 部署与测试]]
 
 ## 建议复习顺序
 
@@ -55,6 +57,8 @@ aliases:
   看 [[Workflow-07 上层模块：WFTaskFactory、Server、Client]]
 - 想回答“DNS、路由、upstream、协议层怎么讲”：
   看 [[Workflow-08 路由、DNS、协议层]]
+- 想回答“这个项目不是网站，应该怎么部署测试和量化学习成果”：
+  看 [[Workflow-11 部署与测试]]
 
 ## 你的面试主线
 
