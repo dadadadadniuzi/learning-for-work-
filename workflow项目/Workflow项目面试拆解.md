@@ -27,6 +27,7 @@ aliases:
 - [[Workflow-09 高频面试题与背诵稿]]
 - [[Workflow-10 10分钟速背版]]
 - [[Workflow-11 部署与测试]]
+- [[Workflow-12 随机图库面试项目规划]]
 
 ## 建议复习顺序
 
@@ -59,6 +60,8 @@ aliases:
   看 [[Workflow-08 路由、DNS、协议层]]
 - 想回答“这个项目不是网站，应该怎么部署测试和量化学习成果”：
   看 [[Workflow-11 部署与测试]]
+- 想回答“怎么用 Workflow 做一个 HTTP + Redis + MySQL 的面试项目”：
+  看 [[Workflow-12 随机图库面试项目规划]]
 
 ## 你的面试主线
 

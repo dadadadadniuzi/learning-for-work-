@@ -44,6 +44,8 @@ created: 2026-04-24
 17. [[TinyWebServer-拆解/17-客户端写响应处理全流程模拟]]
 18. [[TinyWebServer-拆解/18-客户端登录处理全流程模拟]]
 19. [[TinyWebServer-拆解/19-写一条日志的全流程模拟]]
+20. [[TinyWebServer-拆解/20-HTTP半包未读全与连接释放机制]]
+21. [[TinyWebServer-拆解/21-并发注册登录与锁优化]]
 
 ## 推荐阅读顺序
 
@@ -65,6 +67,8 @@ created: 2026-04-24
 
 1. [[TinyWebServer-拆解/09-静态资源、项目亮点与面试表达]]
 2. [[TinyWebServer-面试问答模拟版]]
+3. [[TinyWebServer-拆解/20-HTTP半包未读全与连接释放机制]]
+4. [[TinyWebServer-拆解/21-并发注册登录与锁优化]]
 
 ## 你明天最少要记住的 10 句话
 
