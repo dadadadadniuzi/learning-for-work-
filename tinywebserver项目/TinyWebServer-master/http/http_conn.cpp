@@ -528,8 +528,7 @@ http_conn::HTTP_CODE http_conn::process_read()
         // parse_line 结束后，m_checked_idx 已经推进到下一行开头，
         // 所以这里同步更新 m_start_line，供下一轮 get_line() 使用。
         m_start_line = m_checked_idx;
-        // 调试时可以看到当前状态机正在处理哪一行文本。
-        LOG_INFO("%s", text);
+        // 压测时不在 HTTP 解析热路径逐行打印，避免日志锁和刷盘影响吞吐。
         switch (m_check_state)
         {
         case CHECK_STATE_REQUESTLINE:
@@ -855,8 +854,6 @@ bool http_conn::add_response(const char *format, ...)
     }
     m_write_idx += len;
     va_end(arg_list);
-
-    LOG_INFO("request:%s", m_write_buf);
 
     return true;
 }
